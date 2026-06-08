@@ -1,0 +1,4104 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" id="site">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="meta-title">Khoury Law Office | משרד עורכי דין חורי</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Noto+Serif+Hebrew:wght@300;400;600;700&family=Heebo:wght@300;400;500;600&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Supabase Client CDN Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* DESIGN SYSTEM & VARIABLES */
+    :root {
+      --black: #050508;
+      --black2: #080810;
+      --black3: #0a0a14;
+      --gold: #c9a227;
+      --gold2: #d4a843;
+      --gold-pale: rgba(201, 162, 39, 0.08);
+      --gold-border: rgba(201, 162, 39, 0.15);
+      --cream: #f5f0e8;
+      --cream2: #f0ebe0;
+      --ink: #1a1a2e;
+      --slate: #5a6272;
+      --white: #ffffff;
+      --shadow: 0 10px 40px rgba(5, 5, 8, 0.2);
+      --shadow-hover: 0 20px 50px rgba(201, 162, 39, 0.12);
+      --font-display-he: 'Noto Serif Hebrew', serif;
+      --font-display-ar: 'Cairo', sans-serif;
+      --font-display-en: 'Playfair Display', serif;
+      --font-body-he: 'Heebo', sans-serif;
+      --font-body-ar: 'Cairo', sans-serif;
+      --font-body-en: 'Heebo', sans-serif;
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 20px;
+      --radius-round: 50px;
+    }
+
+    /* DEFAULT LANGUAGE TYPOGRAPHY SETTINGS (HEBREW DEFAULT) */
+    html {
+      scroll-behavior: smooth;
+      --font-display: var(--font-display-he);
+      --font-body: var(--font-body-he);
+    }
+    html[lang="ar"] {
+      --font-display: var(--font-display-ar);
+      --font-body: var(--font-body-ar);
+    }
+    html[lang="en"] {
+      --font-display: var(--font-display-en);
+      --font-body: var(--font-body-en);
+    }
+
+    /* GLOBAL RESET & BASE STYLES */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--black);
+      color: var(--white);
+      direction: rtl;
+      overflow-x: hidden;
+    }
+    body.ltr {
+      direction: ltr;
+    }
+    a, button, select, input, textarea {
+      user-select: auto;
+    }
+
+    /* CUSTOM FOCUS INDICATOR FOR ACCESSIBILITY */
+    *:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    /* ACCESSIBILITY: SKIP LINK */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      background: var(--gold);
+      color: var(--black);
+      padding: 10px 20px;
+      z-index: 100000;
+      font-family: var(--font-body);
+      font-weight: 600;
+      text-decoration: none;
+      transition: top 0.3s;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* LAYOUT UTILITIES */
+    .section-dark {
+      background-color: var(--black3);
+      padding: 7rem 5rem;
+      position: relative;
+    }
+    .section-light {
+      background-color: var(--cream);
+      color: var(--ink);
+      padding: 7rem 5rem;
+      position: relative;
+    }
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+    .section-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.2rem;
+    }
+    .section-eyebrow::before {
+      content: '';
+      width: 24px;
+      height: 1.5px;
+      background: var(--gold);
+    }
+    .section-eyebrow span {
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+    }
+    .section-dark .section-title {
+      color: var(--white);
+    }
+    .section-light .section-title {
+      color: var(--ink);
+    }
+    .section-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      max-width: 650px;
+    }
+    .section-dark .section-body {
+      color: rgba(255, 255, 255, 0.65);
+    }
+    .section-light .section-body {
+      color: var(--slate);
+    }
+
+    /* SCROLL PROGRESS BAR */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      z-index: 10002;
+      pointer-events: none;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--gold);
+      width: 0%;
+      transition: width 0.1s ease-out;
+    }
+
+    /* MAGNETIC CURSOR */
+    .custom-cursor {
+      width: 12px;
+      height: 12px;
+      background-color: var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 10000;
+      transition: width 0.2s, height 0.2s, background-color 0.2s;
+    }
+    .custom-cursor-ring {
+      width: 40px;
+      height: 40px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      position: fixed;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 9999;
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+    }
+    .custom-cursor.hovered {
+      width: 8px;
+      height: 8px;
+      background-color: var(--white);
+    }
+    .custom-cursor-ring.hovered {
+      width: 55px;
+      height: 55px;
+      border-color: var(--white);
+      background: rgba(201, 162, 39, 0.05);
+    }
+    @media (max-width: 768px) {
+      .custom-cursor, .custom-cursor-ring { display: none; }
+    }
+
+    /* CURTAIN INTRO ANIMATION */
+    .curtain-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99999;
+      display: flex;
+      pointer-events: auto;
+    }
+    .curtain-panel {
+      flex: 1;
+      height: 100%;
+      background: linear-gradient(135deg, #09090d 0%, #15120a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .curtain-left {
+      border-inline-end: 0.5px solid var(--gold-border);
+    }
+    .curtain-right {
+      border-inline-start: 0.5px solid var(--gold-border);
+    }
+    .curtain-text {
+      font-family: var(--font-display-he);
+      font-size: clamp(1.2rem, 2.5vw, 2.2rem);
+      color: var(--gold2);
+      text-align: center;
+      padding: 2rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+    .curtain-right .curtain-text {
+      font-family: var(--font-display-en);
+      font-style: italic;
+    }
+    .curtain-skip {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(5, 5, 8, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--gold-border);
+      color: var(--gold2);
+      padding: 10px 24px;
+      border-radius: var(--radius-round);
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 100000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, border-color 0.3s;
+    }
+    .curtain-skip:hover {
+      border-color: var(--gold);
+    }
+    .curtain-skip.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* HEADER & LANG BAR STACK */
+    .header-stack {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+    }
+    .lang-bar {
+      height: 42px;
+      background: rgba(8, 8, 16, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 4rem;
+      gap: 6px;
+    }
+    .lang-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--slate);
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 12px;
+      border-radius: var(--radius-round);
+      transition: all 0.25s ease;
+    }
+    .lang-btn:hover, .lang-btn.active {
+      color: var(--gold);
+      border-color: var(--gold);
+      background: var(--gold-pale);
+    }
+    .lang-sep {
+      color: rgba(201, 162, 39, 0.2);
+      font-size: 10px;
+    }
+    .main-header {
+      height: 70px;
+      background: rgba(8, 8, 16, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--gold-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4rem;
+      transition: box-shadow 0.3s ease;
+    }
+    .main-header.scrolled {
+      box-shadow: 0 4px 30px rgba(5, 5, 8, 0.3);
+      background: rgba(5, 5, 8, 0.95);
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .logo-seal {
+      width: 42px;
+      height: 42px;
+      background: var(--black);
+      border: 1px solid var(--gold-border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: border-color 0.3s ease;
+    }
+    .logo:hover .logo-seal {
+      border-color: var(--gold);
+    }
+    .logo-seal svg {
+      width: 18px;
+      height: 18px;
+      fill: var(--gold);
+    }
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .logo-text strong {
+      font-family: var(--font-display);
+      font-size: 16px;
+      color: var(--white);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+    .logo-text small {
+      font-size: 9px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+    }
+    nav a {
+      color: var(--slate);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.25s ease;
+      position: relative;
+      padding: 4px 0;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      inset-inline-start: 0;
+      width: 0;
+      height: 1.5px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: var(--gold);
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    .header-cta {
+      background: var(--gold);
+      color: var(--black) !important;
+      padding: 10px 22px;
+      border-radius: var(--radius-sm);
+      font-weight: 700 !important;
+      letter-spacing: 0.04em;
+      transition: all 0.25s ease !important;
+      border: 1px solid var(--gold);
+    }
+    .header-cta::after {
+      display: none !important;
+    }
+    .header-cta:hover {
+      background: transparent !important;
+      color: var(--gold) !important;
+      box-shadow: 0 0 15px rgba(201, 162, 39, 0.2);
+    }
+
+    /* HAMBURGER & OVERLAY */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 26px;
+      height: 18px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .hamburger span {
+      width: 100%;
+      height: 2px;
+      background-color: var(--gold);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hamburger.open span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg);
+    }
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.open span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+    .mobile-menu-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--black);
+      z-index: 998;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .mobile-menu-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .mobile-menu-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+    }
+    .mobile-menu-nav a {
+      font-family: var(--font-display);
+      font-size: 24px;
+      color: var(--white);
+      text-decoration: none;
+      transition: color 0.3s;
+      font-weight: 500;
+    }
+    .mobile-menu-nav a:hover {
+      color: var(--gold);
+    }
+
+    /* REVEAL TRANSITIONS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 112px 5rem 5rem;
+      position: relative;
+      overflow: hidden;
+      background-color: var(--black);
+    }
+    #hero-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--gold-pale);
+      border: 1px solid var(--gold-border);
+      padding: 8px 18px;
+      border-radius: var(--radius-round);
+      margin: 0 auto 2rem;
+    }
+    .hero-eyebrow span {
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .hero-eyebrow-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.6rem, 5vw, 4.2rem);
+      color: var(--white);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.8rem;
+    }
+    .hero h1 em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .hero-word {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .hero-word.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.8;
+      margin: 0 auto 3rem;
+      max-width: 600px;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 4rem;
+    }
+    .btn-solid {
+      background: var(--gold);
+      color: var(--black);
+      padding: 14px 32px;
+      border: 1px solid var(--gold);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-solid:hover {
+      background: transparent;
+      color: var(--gold);
+      box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
+    }
+    .btn-wa {
+      background: #25d366;
+      color: #fff;
+      padding: 14px 30px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      animation: waglow 3s ease-in-out infinite;
+    }
+    @keyframes waglow {
+      0%, 100% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3); }
+      50% { box-shadow: 0 4px 30px rgba(37, 211, 102, 0.55); }
+    }
+    .btn-wa:hover {
+      background: #1fb855;
+      transform: translateY(-2px);
+    }
+    .hero-trust {
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      border-top: 1px solid var(--gold-border);
+      padding-top: 2.5rem;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .trust-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .trust-num {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--gold);
+      font-weight: 700;
+      line-height: 1;
+    }
+    .trust-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.08em;
+      margin-top: 6px;
+      text-transform: uppercase;
+    }
+    .trust-div {
+      width: 1px;
+      background: var(--gold-border);
+    }
+    .scroll-down {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--gold);
+      text-decoration: none;
+      z-index: 2;
+      transition: opacity 0.3s ease;
+    }
+    .scroll-down svg {
+      width: 20px;
+      height: 20px;
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-8px); }
+      60% { transform: translateY(-4px); }
+    }
+
+    /* SCRAMBLE CHARACTER UTILITY */
+    .scramble-char {
+      color: var(--gold);
+      opacity: 0.8;
+      font-family: monospace;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      background: var(--black2);
+      border-top: 1px solid var(--gold-border);
+      border-bottom: 1px solid var(--gold-border);
+      padding: 3rem 5rem;
+      position: relative;
+      z-index: 2;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: center;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .stat-col {
+      text-align: center;
+      padding: 1rem 0;
+      position: relative;
+    }
+    .stat-col:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 15%;
+      bottom: 15%;
+      right: 0;
+      width: 1px;
+      background: var(--gold-border);
+    }
+    body.ltr .stat-col:not(:last-child)::after {
+      right: auto;
+      left: 0;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      color: var(--gold);
+      font-weight: 700;
+      line-height: 1;
+    }
+    .stat-lbl {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.1em;
+      margin-top: 8px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* ABOUT SECTION */
+    .about-inner {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-left {
+      transform: translateX(60px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      opacity: 0;
+    }
+    .about-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .about-right {
+      transform: translateX(-60px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      opacity: 0;
+    }
+    .about-right.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .value-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 2rem;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--cream2);
+      border: 1px solid var(--gold-border);
+      padding: 8px 18px;
+      border-radius: var(--radius-round);
+      font-size: 13px;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .pill-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+    .about-card {
+      background: var(--ink);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      border: 1px solid var(--gold-border);
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+    .about-quote-mark {
+      font-family: var(--font-display-en);
+      font-size: 8rem;
+      color: var(--gold);
+      line-height: 0.7;
+      opacity: 0.1;
+      position: absolute;
+      top: 1.5rem;
+      inset-inline-end: 2.5rem;
+      pointer-events: none;
+    }
+    blockquote {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      color: var(--white);
+      font-style: italic;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+    }
+    cite {
+      display: block;
+      font-size: 12px;
+      color: var(--gold2);
+      letter-spacing: 0.1em;
+      margin-top: 1.5rem;
+      font-style: normal;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* MANIFESTO SECTION */
+    .manifesto {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      padding: 6rem 5rem;
+      background-color: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+    #manifesto-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .manifesto-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      text-align: center;
+      width: 100%;
+    }
+    .manifesto-line {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .manifesto-line.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .manifest-he {
+      color: var(--white);
+      font-family: var(--font-display-he);
+    }
+    .manifest-ar {
+      color: rgba(255, 255, 255, 0.6);
+      font-family: var(--font-display-ar);
+    }
+    .manifest-en {
+      color: rgba(255, 255, 255, 0.35);
+      font-family: var(--font-display-en);
+      font-style: italic;
+    }
+
+    /* SERVICES SECTION */
+    .services-intro {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      gap: 2rem;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink);
+      padding: 12px 28px;
+      border: 1.5px solid var(--ink);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      box-shadow: 0 0 15px rgba(201, 162, 39, 0.1);
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .service-card-wrapper {
+      perspective: 1000px;
+      height: 260px;
+    }
+    .service-card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .service-card-wrapper:hover .service-card {
+      transform: rotateY(180deg);
+    }
+    [dir="rtl"] .service-card-wrapper:hover .service-card {
+      transform: rotateY(-180deg);
+    }
+    .card-face {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: var(--radius);
+      padding: 2.2rem 1.8rem;
+      box-sizing: border-box;
+      box-shadow: var(--shadow);
+    }
+    .card-front {
+      background: var(--white);
+      border: 1px solid var(--gold-border);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    .card-back {
+      background: var(--ink);
+      border: 1px solid var(--gold);
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: var(--white);
+      text-align: center;
+    }
+    [dir="rtl"] .card-back {
+      transform: rotateY(-180deg);
+    }
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gold-pale);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .service-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+    .service-icon-large {
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--gold-border);
+    }
+    .service-icon-large svg {
+      width: 30px;
+      height: 30px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+    }
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--ink);
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .service-card p {
+      font-size: 0.88rem;
+      color: var(--slate);
+      line-height: 1.6;
+    }
+    .card-back-cta {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--gold2);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+      transition: border-color 0.25s;
+    }
+    .service-card-wrapper:hover .card-back-cta {
+      border-color: var(--gold2);
+    }
+
+    /* PROCESS SECTION */
+    .process-container {
+      position: relative;
+      margin-top: 4.5rem;
+    }
+    .process-line-svg {
+      position: absolute;
+      top: 42px;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+    .process-step {
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .process-step.bounce-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .step-badge-circle {
+      width: 84px;
+      height: 84px;
+      background: var(--black2);
+      border: 2px solid var(--gold-border);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.8rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .process-step:hover .step-badge-circle {
+      border-color: var(--gold);
+      box-shadow: 0 0 20px rgba(201, 162, 39, 0.2);
+    }
+    .step-num {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      margin-bottom: 2px;
+    }
+    .step-badge-circle svg {
+      width: 22px;
+      height: 22px;
+      stroke: var(--white);
+      fill: none;
+      stroke-width: 1.5;
+    }
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--white);
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+    .step-desc {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1.6;
+      max-width: 240px;
+      margin: 0 auto;
+    }
+
+    /* PARTNERS SECTION */
+    .partners-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 4rem;
+    }
+    .partner-card {
+      background: var(--black2);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1.2fr 1.8fr;
+      box-shadow: var(--shadow);
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .partner-card:hover {
+      border-color: var(--gold);
+      box-shadow: 0 10px 40px rgba(201, 162, 39, 0.08);
+    }
+    .partner-img-wrap {
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      min-height: 380px;
+    }
+    .partner-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      filter: grayscale(40%) brightness(0.85);
+      transition: filter 0.5s ease, transform 0.5s ease;
+    }
+    .partner-card:hover .partner-img-wrap img {
+      filter: grayscale(0%) brightness(1);
+      transform: scale(1.04);
+    }
+    .partner-img-badge {
+      position: absolute;
+      bottom: 1.2rem;
+      inset-inline-start: 1.2rem;
+      background: var(--gold);
+      color: var(--black);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      box-shadow: var(--shadow);
+    }
+    .partner-body {
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .partner-name {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--white);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .partner-role {
+      font-size: 11px;
+      color: var(--gold2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    .partner-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.5rem;
+    }
+    .p-tag {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 5px 12px;
+      border-radius: var(--radius-round);
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 500;
+    }
+    .partner-bio {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .partner-contact {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .p-contact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: all 0.25s ease;
+      font-family: var(--font-body);
+    }
+    .p-contact-btn:hover {
+      background: var(--gold);
+      color: var(--black);
+      border-color: var(--gold);
+      box-shadow: 0 0 15px rgba(201, 162, 39, 0.25);
+    }
+    .p-contact-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* TESTIMONIALS SECTION */
+    .testimonials-carousel-wrap {
+      position: relative;
+      margin-top: 4rem;
+    }
+    .testimonials-scroll {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none; /* Firefox */
+      padding-bottom: 1rem;
+    }
+    .testimonials-scroll::-webkit-scrollbar {
+      display: none; /* Safari/Chrome */
+    }
+    .testimonial-card {
+      min-width: 360px;
+      flex: 1 0 calc(33.333% - 1rem);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-sizing: border-box;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color 0.3s;
+    }
+    .testimonial-card:hover {
+      border-color: var(--gold);
+    }
+    .t-stars {
+      color: var(--gold);
+      font-size: 14px;
+      margin-bottom: 1.2rem;
+      letter-spacing: 2px;
+    }
+    .t-quote {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.85);
+      font-style: italic;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    .t-author {
+      display: flex;
+      flex-direction: column;
+    }
+    .t-author strong {
+      font-size: 13px;
+      color: var(--white);
+      font-weight: 600;
+    }
+    .t-author span {
+      font-size: 11px;
+      color: var(--gold2);
+      margin-top: 2px;
+    }
+    .carousel-controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 2.5rem;
+    }
+    .carousel-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--gold-border);
+      color: var(--gold);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+    }
+    .carousel-btn:hover {
+      background: var(--gold);
+      color: var(--black);
+      border-color: var(--gold);
+    }
+    .carousel-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* CONTACT SECTION */
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 5rem;
+    }
+    .contact-form-box {
+      background: var(--cream2);
+      border-radius: var(--radius-lg);
+      padding: 3.5rem;
+      border: 1px solid var(--gold-border);
+      box-shadow: 0 10px 40px rgba(5, 5, 8, 0.05);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    .form-group {
+      position: relative;
+      margin-bottom: 2.2rem;
+    }
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+    .form-input {
+      width: 100%;
+      padding: 12px 0;
+      background: transparent;
+      border: none;
+      border-bottom: 1.5px solid var(--slate);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 0.98rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .form-input:focus {
+      border-color: var(--gold);
+    }
+    .form-label {
+      position: absolute;
+      top: 12px;
+      inset-inline-start: 0;
+      color: var(--slate);
+      font-family: var(--font-body);
+      font-size: 0.98rem;
+      pointer-events: none;
+      transition: transform 0.25s ease, color 0.25s ease, font-size 0.25s ease;
+    }
+    .form-input:focus ~ .form-label,
+    .form-input:not(:placeholder-shown) ~ .form-label {
+      transform: translateY(-24px);
+      font-size: 0.8rem;
+      color: var(--gold);
+    }
+    .form-select-wrapper {
+      position: relative;
+      margin-bottom: 2.2rem;
+      grid-column: span 2;
+    }
+    .form-select-wrapper label {
+      display: block;
+      font-size: 11px;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .form-select-wrapper select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--white);
+      border: 1.5px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.3s;
+    }
+    .form-select-wrapper select:focus {
+      border-color: var(--gold);
+    }
+    .form-select-wrapper::after {
+      content: '▼';
+      font-size: 10px;
+      color: var(--slate);
+      position: absolute;
+      bottom: 16px;
+      inset-inline-end: 16px;
+      pointer-events: none;
+    }
+    .form-submit {
+      width: 100%;
+      padding: 16px;
+      background: var(--ink);
+      color: var(--white);
+      border: none;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: all 0.25s;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .form-submit:hover {
+      background: var(--gold);
+      color: var(--black);
+      box-shadow: 0 4px 15px rgba(201, 162, 39, 0.2);
+    }
+    .form-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .form-submit svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.5;
+    }
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    .form-success-icon {
+      width: 72px;
+      height: 72px;
+      background: rgba(37, 211, 102, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+    .form-success-icon svg {
+      width: 36px;
+      height: 36px;
+      stroke: #25d366;
+      fill: none;
+      stroke-width: 2;
+    }
+    .contact-info-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .contact-details-list {
+      margin-bottom: 2.5rem;
+    }
+    .contact-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 1.5rem;
+      padding: 1.2rem 1.6rem;
+      background: var(--cream2);
+      border-radius: var(--radius);
+      transition: background 0.3s;
+    }
+    .contact-detail-row:hover {
+      background: var(--gold-pale);
+    }
+    .contact-detail-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--ink);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-detail-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--gold2);
+      fill: none;
+      stroke-width: 1.8;
+    }
+    .contact-detail-text strong {
+      display: block;
+      font-size: 11px;
+      color: var(--slate);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .contact-detail-text span {
+      font-size: 0.98rem;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .map-frame-wrap {
+      background: var(--cream2);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--gold-border);
+      height: 280px;
+    }
+    .map-frame-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--black2);
+      padding: 4.5rem 5rem 2.5rem;
+      border-top: 1px solid var(--gold-border);
+      position: relative;
+      z-index: 2;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.6fr 1fr 1.2fr;
+      gap: 4rem;
+      margin-bottom: 3.5rem;
+    }
+    .footer-tagline {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.4);
+      margin-top: 1.2rem;
+      line-height: 1.8;
+      max-width: 290px;
+    }
+    .footer-col h4 {
+      font-size: 11px;
+      color: var(--gold2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    .footer-col a, .footer-col p {
+      display: block;
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      margin-bottom: 0.8rem;
+      transition: color 0.2s;
+      line-height: 1.6;
+    }
+    .footer-col a:hover {
+      color: var(--gold2);
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(201, 162, 39, 0.08);
+      padding-top: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-bottom p {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.3);
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.8rem;
+    }
+    .footer-links a {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover {
+      color: var(--gold2);
+    }
+
+    /* WHATSAPP FLOAT */
+    .wa-float {
+      position: fixed;
+      bottom: 2rem;
+      inset-inline-end: 2rem;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .wa-tooltip {
+      background: var(--black);
+      border: 1px solid var(--gold-border);
+      color: var(--gold2);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+    .wa-float:hover .wa-tooltip {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .wa-btn {
+      background: #25d366;
+      color: #fff;
+      border-radius: 50px;
+      padding: 14px 22px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(37, 211, 102, 0.35);
+      transition: all 0.25s;
+      text-decoration: none;
+      white-space: nowrap;
+      animation: waglow2 3s ease-in-out infinite;
+    }
+    @keyframes waglow2 {
+      0%, 100% { box-shadow: 0 6px 24px rgba(37, 211, 102, 0.35); }
+      50% { box-shadow: 0 6px 40px rgba(37, 211, 102, 0.6); }
+    }
+    .wa-btn:hover {
+      background: #1fb855;
+      transform: translateY(-3px);
+    }
+    .wa-btn svg {
+      width: 22px;
+      height: 22px;
+      fill: #fff;
+      flex-shrink: 0;
+    }
+
+    /* MEDIA BREAKPOINTS */
+    @media (max-width: 1024px) {
+      .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .partner-card {
+        grid-template-columns: 1fr;
+      }
+      .partner-img-wrap {
+        min-height: 300px;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .footer-col:last-child {
+        grid-column: span 2;
+      }
+    }
+    @media (max-width: 768px) {
+      body {
+        cursor: default;
+      }
+      .section-dark, .section-light, .stats-bar, footer {
+        padding: 4rem 1.5rem;
+      }
+      .lang-bar, .main-header {
+        padding: 0 1.5rem;
+      }
+      nav, .header-cta {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+      .hero {
+        padding: 112px 1.5rem 4rem;
+      }
+      .hero-trust {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+      }
+      .trust-div {
+        width: 100%;
+        height: 1px;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .stat-col::after {
+        display: none !important;
+      }
+      .about-inner, .contact-inner, .footer-grid, .partners-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .about-left, .about-right {
+        transform: none !important;
+        opacity: 1 !important;
+      }
+      .services-intro {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .services-grid {
+        grid-template-columns: 1fr;
+      }
+      .process-line-svg {
+        display: none;
+      }
+      .process-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        position: relative;
+        padding-inline-start: 2rem;
+      }
+      .process-grid::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        inset-inline-start: 1rem;
+        width: 2px;
+        background: var(--gold-border);
+      }
+      .process-step {
+        text-align: start;
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .step-badge-circle {
+        margin: 0;
+        flex-shrink: 0;
+      }
+      .step-desc {
+        margin: 0;
+        max-width: none;
+      }
+      .testimonial-card {
+        min-width: 280px;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-group.full-width {
+        grid-column: span 1;
+      }
+      .footer-col {
+        grid-column: span 1 !important;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+      }
+      .footer-links {
+        justify-content: center;
+      }
+    }
+
+    /* REVIEW CAROUSEL & MODAL STYLES */
+    .review-action-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    .btn-review {
+      background: transparent;
+      color: var(--gold);
+      border: 1px solid var(--gold-border);
+      padding: 10px 24px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 13px;
+      transition: all 0.25s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-review:hover {
+      background: var(--gold-pale);
+      border-color: var(--gold);
+      box-shadow: 0 0 15px rgba(201, 162, 39, 0.15);
+    }
+    .review-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 5, 8, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10005;
+      padding: 1rem;
+    }
+    .review-modal-overlay.open {
+      display: flex;
+    }
+    .review-modal-box {
+      background: rgba(8, 8, 16, 0.96);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 500px;
+      padding: 2.5rem;
+      position: relative;
+      box-shadow: var(--shadow-hover);
+      color: var(--white);
+      animation: modalFadeIn 0.35s ease;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .review-modal-close {
+      position: absolute;
+      top: 1.2rem;
+      inset-inline-end: 1.2rem;
+      background: transparent;
+      border: none;
+      color: var(--slate);
+      cursor: pointer;
+      font-size: 20px;
+      transition: color 0.2s;
+    }
+    .review-modal-close:hover {
+      color: var(--gold);
+    }
+    .review-modal-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .star-select-wrap {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+      font-size: 28px;
+    }
+    .star-select-item {
+      color: var(--slate);
+      cursor: pointer;
+      transition: color 0.2s, transform 0.1s;
+    }
+    .star-select-item:hover {
+      transform: scale(1.15);
+    }
+    .star-select-item.selected {
+      color: var(--gold);
+    }
+    .review-form-group {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .review-form-group label {
+      font-size: 11px;
+      color: var(--gold2);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .review-form-input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .review-form-input:focus {
+      border-color: var(--gold);
+    }
+    .review-form-select {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(8, 8, 16, 0.95);
+      border: 1px solid var(--gold-border);
+      border-radius: var(--radius-sm);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.3s;
+    }
+    .review-form-select:focus {
+      border-color: var(--gold);
+    }
+    .review-form-select-wrapper {
+      position: relative;
+    }
+    .review-form-select-wrapper::after {
+      content: '▼';
+      font-size: 8px;
+      color: var(--slate);
+      position: absolute;
+      top: 50%;
+      inset-inline-end: 14px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .review-form-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .review-form-submit:hover {
+      box-shadow: 0 0 15px rgba(201, 162, 39, 0.3);
+      background: var(--gold2);
+    }
+    .review-form-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body id="site">
+  <!-- Skip to Content Link -->
+  <a href="#home" class="skip-link">דילוג לתוכן המרכזי / Skip to Content</a>
+
+  <!-- Fixed Magnetic Cursor Elements -->
+  <div id="custom-cursor" class="custom-cursor"></div>
+  <div id="custom-cursor-ring" class="custom-cursor-ring"></div>
+
+  <!-- Scroll Progress Bar -->
+  <div class="progress-container">
+    <div id="progress-bar" class="progress-bar"></div>
+  </div>
+
+  <!-- Curtain Intro Animation Overlay -->
+  <div id="curtain-container" class="curtain-container">
+    <div id="curtain-left" class="curtain-panel curtain-left">
+      <div class="curtain-text">חורי ושות׳ — עורכי דין</div>
+    </div>
+    <div id="curtain-right" class="curtain-panel curtain-right">
+      <div class="curtain-text">Khoury & Co. — Law Firm</div>
+    </div>
+    <button id="curtain-skip" class="curtain-skip" onclick="skipCurtain()">דלג / Skip</button>
+  </div>
+
+  <!-- Header Stack -->
+  <div class="header-stack">
+    <!-- Language Bar -->
+    <div class="lang-bar">
+      <button class="lang-btn active" onclick="setLang('he')">עברית</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" onclick="setLang('ar')">العربية</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" onclick="setLang('en')">English</button>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header id="header" class="main-header" role="banner">
+      <a href="#home" class="logo">
+        <div class="logo-seal">
+          <svg viewBox="0 0 24 24"><path d="M12 1l3 6 6.5 1-4.7 4.6 1.1 6.4L12 16l-5.9 3 1.1-6.4L2.5 8 9 7z"/></svg>
+        </div>
+        <div class="logo-text">
+          <strong id="firm-name">חורי ושות' — עורכי דין</strong>
+          <small id="firm-sub">כפר כנא, ישראל</small>
+        </div>
+      </a>
+      
+      <nav role="navigation">
+        <a href="#about" id="nav-about">אודות</a>
+        <a href="#services" id="nav-services">שירותים</a>
+        <a href="#partners" id="nav-partners">עורכי הדין</a>
+        <a href="#contact" class="header-cta" id="nav-contact">צור קשר</a>
+      </nav>
+
+      <button id="hamburger" class="hamburger" aria-expanded="false" aria-controls="mobile-menu" aria-label="פתח תפריט / Open menu" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </header>
+  </div>
+
+  <!-- Mobile Overlay Menu -->
+  <div id="mobile-menu" class="mobile-menu-overlay" role="dialog" aria-modal="true">
+    <div class="mobile-menu-nav">
+      <a href="#about" id="mob-about" onclick="toggleMobileMenu()">אודות</a>
+      <a href="#services" id="mob-services" onclick="toggleMobileMenu()">שירותים</a>
+      <a href="#partners" id="mob-partners" onclick="toggleMobileMenu()">עורכי הדין</a>
+      <a href="#contact" id="mob-contact" onclick="toggleMobileMenu()">צור קשר</a>
+    </div>
+  </div>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-grid">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-dot"></div>
+        <span id="hero-tag">משרד עורכי דין | כפר כנא</span>
+      </div>
+      <h1 id="hero-h1">
+        <span class="hero-word">אתם</span>
+        <span class="hero-word">מדברים.</span><br>
+        <span class="hero-word">אנחנו</span>
+        <span class="hero-word">שומעים.</span><br>
+        <span class="hero-word"><em>הם</em></span>
+        <span class="hero-word"><em>משלמים.</em></span>
+      </h1>
+      <p class="hero-sub" id="hero-sub">משרד חורי ושות׳ — שני עורכי דין מנוסים, מומחיות רחבה, ליווי אישי ובלתי מתפשר. מכפר כנא, עם ייצוג בכל רחבי ישראל.</p>
+      
+      <div class="hero-ctas">
+        <a href="#contact" class="btn-solid">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span id="cta1">צרו קשר</span>
+        </a>
+        <a href="https://wa.me/9720522597010" class="btn-wa">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span id="cta2">סיוע דחוף — WhatsApp</span>
+        </a>
+      </div>
+
+      <div class="hero-trust">
+        <div class="trust-item">
+          <span class="trust-num">20+</span>
+          <span class="trust-label" id="t1">שנות ניסיון</span>
+        </div>
+        <div class="trust-div"></div>
+        <div class="trust-item">
+          <span class="trust-num">1000+</span>
+          <span class="trust-label" id="t2">תיקים</span>
+        </div>
+        <div class="trust-div"></div>
+        <div class="trust-item">
+          <span class="trust-num">2</span>
+          <span class="trust-label" id="t3">מומחים</span>
+        </div>
+      </div>
+    </div>
+    
+    <a href="#about" class="scroll-down" aria-label="גלול מטה / Scroll down">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 9l-7 7-7-7"/></svg>
+    </a>
+  </section>
+
+  <!-- Stats Bar Section -->
+  <section class="stats-bar">
+    <div class="stats-grid">
+      <div class="stat-col">
+        <div class="stat-num" data-target="20" data-suffix="+">0</div>
+        <div class="stat-lbl" id="as1">שנות ניסיון</div>
+      </div>
+      <div class="stat-col">
+        <div class="stat-num" data-target="1000" data-suffix="+">0</div>
+        <div class="stat-lbl" id="as2">תיקים</div>
+      </div>
+      <div class="stat-col">
+        <div class="stat-num" data-target="8" data-suffix="">0</div>
+        <div class="stat-lbl" id="as3">תחומי מומחיות</div>
+      </div>
+      <div class="stat-col">
+        <div class="stat-num" data-target="2" data-suffix="">0</div>
+        <div class="stat-lbl" id="as4">שותפים</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section-light" id="about">
+    <div class="container">
+      <div class="about-inner">
+        <!-- Left Side: Texts -->
+        <div class="about-left reveal">
+          <div class="section-eyebrow"><span id="about-tag">אודות המשרד</span></div>
+          <h2 class="section-title scramble-title" id="about-title">ידע. ניסיון.<br>תוצאות.</h2>
+          <p class="section-body" id="about-body">משרד חורי ושות׳ הינו משרד עורכי דין בוטיק ממוקם בכפר כנא, המשרת לקוחות פרטיים, עסקיים ומסחריים בכל רחבי ישראל. המשרד מתמחה במגוון רחב של תחומים משפטיים תוך מחויבות עמוקה לשירות אישי, מהיר ומדויק.</p>
+          <div class="value-pills">
+            <div class="pill"><div class="pill-dot"></div><span id="v1">שירות אישי</span></div>
+            <div class="pill"><div class="pill-dot"></div><span id="v2">ניסיון מוכח</span></div>
+            <div class="pill"><div class="pill-dot"></div><span id="v3">זמינות 24/7</span></div>
+            <div class="pill"><div class="pill-dot"></div><span id="v4">שיקול דעת מוחלט</span></div>
+            <div class="pill"><div class="pill-dot"></div><span id="v5">תמחור הוגן</span></div>
+          </div>
+        </div>
+
+        <!-- Right Side: Quote Card -->
+        <div class="about-right reveal">
+          <div class="about-card">
+            <div class="about-quote-mark">“</div>
+            <blockquote id="about-quote">אתם מדברים. אנחנו שומעים. הם משלמים. — זה לא סיסמה, זו הבטחה שאנחנו מקיימים בכל תיק ותיק.</blockquote>
+            <cite id="about-cite">— עו"ד רמי חורי ועו"ד וליד חורי</cite>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Manifesto Section -->
+  <section class="manifesto">
+    <canvas id="manifesto-canvas"></canvas>
+    <div class="container">
+      <div class="manifesto-stack">
+        <div class="section-eyebrow" style="margin: 0 auto 1.5rem;"><span id="manifesto-eyebrow">ההבטחה שלנו</span></div>
+        <div class="manifesto-line manifest-he reveal" id="manifesto-he">אתם מדברים. אנחנו שומעים. הם משלמים.</div>
+        <div class="manifesto-line manifest-ar reveal" id="manifesto-ar">أنتم تتحدثون. ونحن نستمع. وهم يدفعون.</div>
+        <div class="manifesto-line manifest-en reveal" id="manifesto-en">You talk. We listen. They pay.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section class="section-light" id="services">
+    <div class="container">
+      <!-- Intro Row -->
+      <div class="services-intro reveal">
+        <div>
+          <div class="section-eyebrow"><span id="services-tag">תחומי עיסוק</span></div>
+          <h2 class="section-title scramble-title" id="services-title">השירותים שלנו</h2>
+        </div>
+        <a href="#contact" class="btn-ghost" id="services-cta">לייעוץ ראשוני ←</a>
+      </div>
+
+      <!-- Services 3D Flip Grid -->
+      <div class="services-grid">
+        <!-- Service 1 -->
+        <div class="service-card-wrapper reveal">
+          <div class="service-card">
+            <div class="card-face card-front">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+              </div>
+              <h3 id="s1t">עסקאות נדל"ן</h3>
+              <p id="s1p">ליווי משפטי מלא בעסקאות רכישה ומכירה של נדל"ן, רישום בטאבו, ובדיקות נאותות.</p>
+            </div>
+            <div class="card-face card-back">
+              <div class="service-icon-large">
+                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+              </div>
+              <span class="card-back-cta" id="s-cta-text-1">לפרטים נוספים ←</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 2 -->
+        <div class="service-card-wrapper reveal" style="transition-delay: 0.05s;">
+          <div class="service-card">
+            <div class="card-face card-front">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <h3 id="s2t">ירושה וצוואות</h3>
+              <p id="s2p">ייעוץ ועריכת צוואות, ניהול עיזבונות, ייצוג בהליכי ירושה ופניות לרשם הירושות.</p>
+            </div>
+            <div class="card-face card-back">
+              <div class="service-icon-large">
+                <svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              </div>
+              <span class="card-back-cta" id="s-cta-text-2">לפרטים נוספים ←</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 3 -->
+        <div class="service-card-wrapper reveal" style="transition-delay: 0.1s;">
+          <div class="service-card">
+            <div class="card-face card-front">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              </div>
+              <h3 id="s3t">חוק שירותי תעופה</h3>
+              <p id="s3p">תביעות פיצוי על ביטול טיסות, עיכובים ואי-עלייה על מטוס. ניסיון מוכח בזכיית פיצויים.</p>
+            </div>
+            <div class="card-face card-back">
+              <div class="service-icon-large">
+                <svg viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              </div>
+              <span class="card-back-cta" id="s-cta-text-3">לפרטים נוספים ←</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 4 -->
+        <div class="service-card-wrapper reveal" style="transition-delay: 0.15s;">
+          <div class="service-card">
+            <div class="card-face card-front">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+              </div>
+              <h3 id="s4t">בנקאות ודיני בנקאות</h3>
+              <p id="s4p">ייצוג מול בנקים, סכסוכי אשראי, ערעורים על החלטות בנקאיות ועוד.</p>
+            </div>
+            <div class="card-face card-back">
+              <div class="service-icon-large">
+                <svg viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+              </div>
+              <span class="card-back-cta" id="s-cta-text-4">לפרטים נוספים ←</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 5 -->
+        <div class="service-card-wrapper reveal">
+          <div class="service-card">
+            <div class="card-face card-front">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+              </div>
+              <h3 id="s5t">הוצאה לפועל</h3>
+              <p id="s5p">ניהול תיקי הוצאה לפועל, גביית חובות, הגנה מפני עיקולים וביצוע פסקי דין.</p>
+            </div>
+            <div class="card-face card-back">
+              <div class="service-icon-large">
+                <svg viewBox="0 0 24 24"><path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+              </div>
+              <span class="card-back-cta" id="s-cta-text-5">לפרטים נוספים ←</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 6 -->
+        <div class="service-card-wrapper reveal" style="transition-delay: 0.05s;">
+          <div class="service-card">
+            <div class="card-face card-front">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 00-1-1h-2a1 1 0 00-1 1v5m4 0H9"/></svg>
+              </div>
+              <h3 id="s6t">חדלות פירעון ופשיטת רגל</h3>
+              <p id="s6p">ייעוץ וייצוג בהליכי חדלות פירעון, פשיטת רגל ושיקום פיננסי.</p>
+            </div>
+            <div class="card-face card-back">
+              <div class="service-icon-large">
+                <svg viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 00-1-1h-2a1 1 0 00-1 1v5m4 0H9"/></svg>
+              </div>
+              <span class="card-back-cta" id="s-cta-text-6">לפרטים נוספים ←</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 7 -->
+        <div class="service-card-wrapper reveal" style="transition-delay: 0.1s;">
+          <div class="service-card">
+            <div class="card-face card-front">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+              </div>
+              <h3 id="s7t">תרגום מקצועי ואישורים</h3>
+              <p id="s7p">תרגום מסמכים משפטיים, אישור תעודות, ונוטריון לכל סוגי המסמכים הרשמיים.</p>
+            </div>
+            <div class="card-face card-back">
+              <div class="service-icon-large">
+                <svg viewBox="0 0 24 24"><path d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+              </div>
+              <span class="card-back-cta" id="s-cta-text-7">לפרטים נוספים ←</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Service 8 -->
+        <div class="service-card-wrapper reveal" style="transition-delay: 0.15s;">
+          <div class="service-card">
+            <div class="card-face card-front">
+              <div class="service-icon">
+                <svg viewBox="0 0 24 24"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              <h3 id="s8t">ייעוץ עסקי ומסחרי</h3>
+              <p id="s8p">חוזים עסקיים, הסכמי שותפות, ייסוד חברות, וליווי עסקים קטנים ובינוניים.</p>
+            </div>
+            <div class="card-face card-back">
+              <div class="service-icon-large">
+                <svg viewBox="0 0 24 24"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+              </div>
+              <span class="card-back-cta" id="s-cta-text-8">לפרטים נוספים ←</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Timeline Section -->
+  <section class="section-dark" id="process">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 4.5rem;">
+        <div class="section-eyebrow"><span id="process-tag">תהליך העבודה</span></div>
+        <h2 class="section-title scramble-title" id="process-title">איך אנחנו עובדים</h2>
+      </div>
+
+      <div class="process-container">
+        <!-- SVG Horizontal drawing line (Desktop Only) -->
+        <svg class="process-line-svg" viewBox="0 0 1000 10" preserveAspectRatio="none">
+          <path id="process-path" d="M 125,5 L 875,5" stroke="#c9a227" stroke-width="2" fill="none" stroke-dasharray="1000" stroke-dashoffset="1000" />
+        </svg>
+
+        <div class="process-grid">
+          <!-- Step 1 -->
+          <div class="process-step">
+            <div class="step-badge-circle">
+              <span class="step-num">01</span>
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2m8-10a4 4 0 100-8 4 4 0 000 8zm11 2v2m0-6V4"/></svg>
+            </div>
+            <h4 class="step-title" id="step1-t">פגישת ייעוץ</h4>
+            <p class="step-desc" id="step1-d">הבנת הצרכים שלכם, ניתוח ראשוני והערכת סיכויי ההצלחה.</p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="process-step">
+            <div class="step-badge-circle">
+              <span class="step-num">02</span>
+              <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h4 class="step-title" id="step2-t">אסטרטגיה</h4>
+            <p class="step-desc" id="step2-d">בניית תוכנית פעולה משפטית ייחודית ומותאמת עבורכם.</p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="process-step">
+            <div class="step-badge-circle">
+              <span class="step-num">03</span>
+              <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            </div>
+            <h4 class="step-title" id="step3-t">לחימה וייצוג</h4>
+            <p class="step-desc" id="step3-d">עמידה איתנה וייצוג חסר פשרות בערכאות השיפוטיות ומול הצד השני.</p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="process-step">
+            <div class="step-badge-circle">
+              <span class="step-num">04</span>
+              <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h4 class="step-title" id="step4-t">התוצאה הרצויה</h4>
+            <p class="step-desc" id="step4-d">השגת הפיצוי או התוצאה המשפטית הטובה ביותר עבורכם.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Partners (Attorneys) Section -->
+  <section class="section-dark" id="partners" style="border-top: 1px solid var(--gold-border);">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 4rem;">
+        <div class="section-eyebrow"><span id="partners-tag">עורכי הדין</span></div>
+        <h2 class="section-title scramble-title" id="partners-title">הכירו את הצוות</h2>
+        <p class="section-body" id="partners-sub" style="margin: 0 auto;">שני עורכי דין. התמחויות משלימות. תוצאות שמדברות בעד עצמן.</p>
+      </div>
+
+      <!-- Partners Grid -->
+      <div class="partners-grid">
+        <!-- Partner 1 -->
+        <div class="partner-card reveal">
+          <div class="partner-img-wrap">
+            <img src="rami-khoury.jpg" alt="עו&quot;ד רמי חורי">
+            <div class="partner-img-badge" id="p1-badge">שותף מייסד</div>
+          </div>
+          <div class="partner-body">
+            <div>
+              <h3 class="partner-name" id="p1-name">עו"ד רמי חורי</h3>
+              <p class="partner-role" id="p1-role">ייצוג משפטי כללי | שותף בכיר</p>
+              <div class="partner-tags">
+                <span class="p-tag">Civil Law</span>
+                <span class="p-tag">Litigation</span>
+                <span class="p-tag">Aviation Law</span>
+              </div>
+              <p class="partner-bio" id="p1-bio">עו"ד רמי חורי הוא עורך הדין הבכיר של המשרד, המתמחה במגוון רחב של תחומי משפט אזרחי ומסחרי. בעל ניסיון רב בליווי לקוחות פרטיים ועסקיים, עו"ד חורי מפגין מחויבות יוצאת דופן לתוצאות ויחס אישי חם לכל מקרה. הסיסמה המפורסמת שלו — "You Talk, We Listen, They Pay" — מסכמת את גישתו הפשוטה: הלקוח מדבר, המשרד פועל.</p>
+            </div>
+            <div class="partner-contact">
+              <a href="tel:0522597010" class="p-contact-btn"><svg viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>052-259-7010</a>
+              <a href="https://wa.me/9720522597010" class="p-contact-btn" style="background:rgba(37,211,102,.12);border-color:rgba(37,211,102,.3)"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp</a>
+              <a href="mailto:ramikhoury.adv@gmail.com" class="p-contact-btn"><svg viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>מייל</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Partner 2 -->
+        <div class="partner-card reveal" style="transition-delay: 0.15s;">
+          <div class="partner-img-wrap">
+            <img src="walid-khoury.jpg" alt="עו&quot;ד וליד חורי">
+            <div class="partner-img-badge" id="p2-badge">מקרקעין</div>
+          </div>
+          <div class="partner-body">
+            <div>
+              <h3 class="partner-name" id="p2-name">עו"ד וליד חורי</h3>
+              <p class="partner-role" id="p2-role">מומחה מקרקעין | שותף</p>
+              <div class="partner-tags">
+                <span class="p-tag">Real Estate</span>
+                <span class="p-tag">Contracts</span>
+                <span class="p-tag">Insolvency</span>
+              </div>
+              <p class="partner-bio" id="p2-bio">עו"ד וליד חורי הוא המומחה המוביל של המשרד בתחום המקרקעין והנדל"ן. ניסיונו הרב בעסקאות נדל"ן מורכבות, רישומים בטאבו, וסכסוכי קרקע הופך אותו לאחד מבעלי ידע עמוק ביותר בתחום זה באזור. לקוחות מכפר כנא ומכל הצפון פונים אליו לקבלת ייעוץ אמין ומדויק.</p>
+            </div>
+            <div class="partner-contact">
+              <a href="tel:0524891619" class="p-contact-btn"><svg viewBox="0 0 24 24"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>052-489-1619</a>
+              <a href="https://wa.me/9720524891619" class="p-contact-btn" style="background:rgba(37,211,102,.12);border-color:rgba(37,211,102,.3)"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp</a>
+              <a href="mailto:ramikhoury.adv@gmail.com" class="p-contact-btn"><svg viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>מייל</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="section-dark">
+    <div class="container">
+      <div style="text-align: center;">
+        <div class="section-eyebrow"><span id="testimonials-tag">המלצות לקוחות</span></div>
+        <h2 class="section-title scramble-title" id="testimonials-title">מה לקוחות אומרים</h2>
+      </div>
+
+      <div class="testimonials-carousel-wrap">
+        <div class="testimonials-scroll" id="t-carousel">
+          <!-- Quote 1 -->
+          <div class="testimonial-card">
+            <div class="t-stars">★★★★★</div>
+            <p class="t-quote" id="t1-quote">"שירות יוצא מן הכלל. עו\"ד רמי חורי ייצג אותי בתביעת פיצויים מול חברת התעופה והשיג לי את המקסימום. מומלץ בחום!"</p>
+            <div class="t-author">
+              <strong id="t1-auth">אריאל כהן</strong>
+              <span id="t1-sub">חוק שירותי תעופה</span>
+            </div>
+          </div>
+
+          <!-- Quote 2 -->
+          <div class="testimonial-card">
+            <div class="t-stars">★★★★★</div>
+            <p class="t-quote" id="t2-quote">"וליד חורי הוא מקצוען אמיתי במקרקעין. הוא ליווה אותנו ברכישת הדירה הראשונה ברוגע, סבלנות וידע עצום."</p>
+            <div class="t-author">
+              <strong id="t2-auth">שרה לוי</strong>
+              <span id="t2-sub">עסקת נדל"ן</span>
+            </div>
+          </div>
+
+          <!-- Quote 3 -->
+          <div class="testimonial-card">
+            <div class="t-stars">★★★★★</div>
+            <p class="t-quote" id="t3-quote">"الخدمة ممتازة والتعامل راقٍ جداً. المحامي رامي خوري ساعدني في قضية تجارية معقدة وحققنا نجاحاً كبيراً."</p>
+            <div class="t-author">
+              <strong id="t3-auth">أحمد مصاروة</strong>
+              <span id="t3-sub">ייעוץ עסקי</span>
+            </div>
+          </div>
+
+          <!-- Quote 4 -->
+          <div class="testimonial-card">
+            <div class="t-stars">★★★★★</div>
+            <p class="t-quote" id="t4-quote">"أنصح بشدة بالتعامل مع مكتب خوري. المحامي وليد خوري خبير حقيقي في شؤون الأراضي والعقارات في منطقة الشمال."</p>
+            <div class="t-author">
+              <strong id="t4-auth">يوسف كنانة</strong>
+              <span id="t4-sub">סכסוך מקרקעין</span>
+            </div>
+          </div>
+
+          <!-- Quote 5 -->
+          <div class="testimonial-card">
+            <div class="t-stars">★★★★★</div>
+            <p class="t-quote" id="t5-quote">"Khoury Law Office provided outstanding service during my bankruptcy process. They were responsive, professional, and kept me informed every step of the way."</p>
+            <div class="t-author">
+              <strong id="t5-auth">David Miller</strong>
+              <span id="t5-sub">חדלות פירעון</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="carousel-controls">
+          <button class="carousel-btn" aria-label="הקודם / Previous" onclick="scrollCarousel(-1)">
+            <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+          </button>
+          <button class="carousel-btn" aria-label="הבא / Next" onclick="scrollCarousel(1)">
+            <svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Review CTA Button -->
+      <div class="review-action-wrap">
+        <button class="btn-review" onclick="openReviewModal()">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+          </svg>
+          <span id="btn-write-review">כתיבת חוות דעת</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact & Location Section -->
+  <section class="section-light" id="contact" style="border-top: 1px solid var(--gold-border);">
+    <div class="container">
+      <div class="contact-inner">
+        <!-- Left Column: Form -->
+        <div class="contact-form-box reveal">
+          <div id="form-inner">
+            <div class="form-grid">
+              <div class="form-group">
+                <input type="text" id="input-name" class="form-input" placeholder=" ">
+                <label class="form-label" id="lname">שם מלא</label>
+              </div>
+              <div class="form-group">
+                <input type="tel" id="input-phone" class="form-input" placeholder=" ">
+                <label class="form-label" id="lphone">טלפון</label>
+              </div>
+            </div>
+            <div class="form-group full-width">
+              <input type="email" id="input-email" class="form-input" placeholder=" ">
+              <label class="form-label" id="lemail">דואר אלקטרוני</label>
+            </div>
+            
+            <div class="form-select-wrapper">
+              <label id="ltype">תחום הפנייה</label>
+              <select id="form-select">
+                <option>-- בחרו --</option>
+                <option>נדל"ן ומקרקעין</option>
+                <option>ירושה וצוואה</option>
+                <option>חוק תעופה</option>
+                <option>הוצאה לפועל</option>
+                <option>בנקאות</option>
+                <option>חדלות פירעון</option>
+                <option>תרגום ואישורים</option>
+                <option>עסקי ומסחרי</option>
+                <option>אחר</option>
+              </select>
+            </div>
+            
+            <div class="form-group full-width">
+              <textarea id="input-desc" class="form-input" placeholder=" " style="resize:vertical;min-height:100px;"></textarea>
+              <label class="form-label" id="ldesc">תיאור הנושא</label>
+            </div>
+
+            <button class="form-submit" onclick="submitForm()">
+              <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              <span id="sbtn">שלחו פנייה</span>
+            </button>
+          </div>
+
+          <div class="form-success" id="form-success">
+            <div class="form-success-icon">
+              <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <p style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);font-weight:700;margin-bottom:.5rem" id="succ-h">הפנייה נשלחה!</p>
+            <p style="color:var(--slate);font-size:.95rem" id="succ-s">נחזור אליכם בהקדם האפשרי.</p>
+          </div>
+        </div>
+
+        <!-- Right Column: Details & Google Map -->
+        <div class="contact-info-panel reveal" style="transition-delay: 0.15s;">
+          <div class="contact-details-list">
+            <!-- Row 1: Rami Phone -->
+            <div class="contact-detail-row">
+              <div class="contact-detail-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 5a2 2 0 0 1 2-2h3.28a1 1 0 0 1 .948.684l1.498 4.493a1 1 0 0 1-.502 1.21l-2.257 1.13a11.042 11.042 0 0 0 5.516 5.516l1.13-2.257a1 1 0 0 1 1.21-.502l4.493 1.498a1 1 0 0 1 .684.949V19a2 2 0 0 1-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              </div>
+              <div class="contact-detail-text">
+                <strong id="cl1">עו"ד רמי חורי</strong>
+                <span>052-259-7010</span>
+              </div>
+            </div>
+
+            <!-- Row 2: Walid Phone -->
+            <div class="contact-detail-row">
+              <div class="contact-detail-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 5a2 2 0 0 1 2-2h3.28a1 1 0 0 1 .948.684l1.498 4.493a1 1 0 0 1-.502 1.21l-2.257 1.13a11.042 11.042 0 0 0 5.516 5.516l1.13-2.257a1 1 0 0 1 1.21-.502l4.493 1.498a1 1 0 0 1 .684.949V19a2 2 0 0 1-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+              </div>
+              <div class="contact-detail-text">
+                <strong id="cl2">עו"ד וליד חורי</strong>
+                <span>052-489-1619</span>
+              </div>
+            </div>
+
+            <!-- Row 3: Email -->
+            <div class="contact-detail-row">
+              <div class="contact-detail-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
+              </div>
+              <div class="contact-detail-text">
+                <strong id="cl3">מייל</strong>
+                <span>ramikhoury.adv@gmail.com</span>
+              </div>
+            </div>
+
+            <!-- Row 4: Address -->
+            <div class="contact-detail-row">
+              <div class="contact-detail-icon">
+                <svg viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z"/><path d="M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg>
+              </div>
+              <div class="contact-detail-text">
+                <strong id="cl4">מיקום</strong>
+                <span id="addr-text">כפר כנא, ישראל</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Rounded Google Map -->
+          <div class="map-frame-wrap">
+            <iframe src="https://maps.google.com/maps?q=Kafr%20Kanna%2C%20Israel&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand -->
+        <div>
+          <div class="logo">
+            <div class="logo-seal">
+              <svg viewBox="0 0 24 24"><path d="M12 1l3 6 6.5 1-4.7 4.6 1.1 6.4L12 16l-5.9 3 1.1-6.4L2.5 8 9 7z"/></svg>
+            </div>
+            <div class="logo-text" style="margin-inline-start: 12px;">
+              <strong style="font-size: 16px; color:#fff;" id="footer-name">חורי ושות' — עורכי דין</strong>
+              <small id="footer-sub2">כפר כנא, ישראל</small>
+            </div>
+          </div>
+          <p class="footer-tagline" id="footer-desc">משרד עורכי דין בוטיק עם מחויבות עמוקה לתוצאות. שני שותפים. מומחיות רחבה. שירות אישי.</p>
+        </div>
+
+        <!-- Column 2: Services -->
+        <div class="footer-col">
+          <h4 id="fc1h">שירותים</h4>
+          <a href="#services">נדל"ן ומקרקעין</a>
+          <a href="#services">ירושה וצוואות</a>
+          <a href="#services">תעופה</a>
+          <a href="#services">הוצאה לפועל</a>
+          <a href="#services">בנקאות</a>
+        </div>
+
+        <!-- Column 3: Contact Info -->
+        <div class="footer-col">
+          <h4 id="fc2h">יצירת קשר</h4>
+          <p>📞 052-259-7010 (ראמי)</p>
+          <p>📞 052-489-1619 (וליד)</p>
+          <p>✉️ ramikhoury.adv@gmail.com</p>
+          <p id="f-loc">📍 כפר כנא, ישראל</p>
+          <p id="f-hrs" style="margin-top:.6rem">א׳–ה׳: 9:00–19:00</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p id="footer-copy">© 2025 חורי — עורכי דין | כל הזכויות שמורות</p>
+        <div class="footer-links">
+          <a href="#" id="priv">מדיניות פרטיות</a>
+          <a href="#" id="terms">תנאי שימוש</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Write a Review Modal -->
+  <div class="review-modal-overlay" id="review-modal">
+    <div class="review-modal-box">
+      <button class="review-modal-close" onclick="closeReviewModal()" aria-label="סגירה / Close">✕</button>
+      
+      <div id="review-form-inner">
+        <h3 class="review-modal-title" id="review-modal-title">כתבו חוות דעת</h3>
+        
+        <!-- Star Rating Selector -->
+        <div class="star-select-wrap" id="star-select-wrap">
+          <span class="star-select-item" data-value="1">★</span>
+          <span class="star-select-item" data-value="2">★</span>
+          <span class="star-select-item" data-value="3">★</span>
+          <span class="star-select-item" data-value="4">★</span>
+          <span class="star-select-item" data-value="5">★</span>
+        </div>
+        
+        <!-- Review Form Fields -->
+        <div class="review-form-group">
+          <label for="review-name" id="review-label-name">שם מלא</label>
+          <input type="text" id="review-name" class="review-form-input" required autocomplete="name">
+        </div>
+        
+        <div class="review-form-group">
+          <label for="review-practice-area" id="review-label-area">תחום השירות</label>
+          <div class="review-form-select-wrapper">
+            <select id="review-practice-area" class="review-form-select">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+        </div>
+        
+        <div class="review-form-group">
+          <label for="review-comment" id="review-label-comment">חוות דעתכם</label>
+          <textarea id="review-comment" class="review-form-input" rows="4" required></textarea>
+        </div>
+        
+        <button class="review-form-submit" onclick="submitReview()" id="btn-submit-review">
+          <span id="review-submit-text">שליחת חוות דעת</span>
+        </button>
+      </div>
+
+      <!-- Success Screen -->
+      <div id="review-success" style="display: none; text-align: center; padding: 2rem 0;">
+        <div style="font-size: 50px; color: var(--gold); margin-bottom: 1rem;">✓</div>
+        <h3 class="review-modal-title" id="review-success-title">תודה רבה!</h3>
+        <p id="review-success-msg" style="color: var(--slate); font-size: 14px; line-height: 1.6;">
+          חוות הדעת שלך נשלחה בהצלחה ותוצג באתר לאחר אישור מנהל המשרד.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WhatsApp Float Button -->
+  <div class="wa-float" id="wa-float">
+    <div class="wa-tooltip" id="wa-tip">סיוע דחוף — זמין</div>
+    <a href="https://wa.me/9720522597010" class="wa-btn" aria-label="סיוע דחוף בוואטסאפ / WhatsApp Assistance">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span id="wa-txt">WhatsApp עכשיו</span>
+    </a>
+  </div>
+
+  <script>
+    /* CURTAIN INTRO ANIMATION */
+    const curtainContainer = document.getElementById('curtain-container');
+    const skipBtn = document.getElementById('curtain-skip');
+    const leftPanel = document.getElementById('curtain-left');
+    const rightPanel = document.getElementById('curtain-right');
+
+    function skipCurtain() {
+      if (curtainContainer) {
+        curtainContainer.style.opacity = '0';
+        curtainContainer.style.transition = 'opacity 0.6s ease';
+        setTimeout(() => {
+          curtainContainer.style.display = 'none';
+        }, 600);
+      }
+      if (skipBtn) {
+        skipBtn.style.display = 'none';
+      }
+    }
+
+    if (sessionStorage.getItem('curtainPlayed') === 'true' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (curtainContainer) curtainContainer.style.display = 'none';
+    } else {
+      setTimeout(() => {
+        if (skipBtn) skipBtn.classList.add('visible');
+      }, 800);
+
+      setTimeout(() => {
+        if (leftPanel) leftPanel.style.transform = 'translateX(-100%)';
+        if (rightPanel) rightPanel.style.transform = 'translateX(100%)';
+        
+        setTimeout(() => {
+          if (curtainContainer) {
+            curtainContainer.style.opacity = '0';
+            setTimeout(() => {
+              curtainContainer.style.display = 'none';
+            }, 300);
+          }
+          if (skipBtn) skipBtn.style.display = 'none';
+          sessionStorage.setItem('curtainPlayed', 'true');
+        }, 1800);
+      }, 600);
+    }
+
+    /* SCROLL ACTIONS: HEADER SCROLL & PROGRESS BAR */
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      if (header) {
+        header.classList.toggle('scrolled', window.scrollY > 50);
+      }
+
+      // Scroll Progress Bar
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      const progressBar = document.getElementById('progress-bar');
+      if (progressBar) {
+        progressBar.style.width = scrolled + '%';
+      }
+    });
+
+    /* MOBILE HAMBURGER MENU */
+    function toggleMobileMenu() {
+      const burger = document.getElementById('hamburger');
+      const menu = document.getElementById('mobile-menu');
+      if (burger && menu) {
+        const isOpen = burger.classList.toggle('open');
+        menu.classList.toggle('open', isOpen);
+        burger.setAttribute('aria-expanded', isOpen);
+      }
+    }
+
+    /* REVEAL ON SCROLL IntersectionObserver */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* HERO WORD-BY-WORD STAGGER ENTRANCE */
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.hero-word').forEach((word, idx) => {
+          setTimeout(() => {
+            word.classList.add('visible');
+          }, idx * 120 + 200);
+        });
+      } else {
+        document.querySelectorAll('.hero-word').forEach(word => word.classList.add('visible'));
+      }
+    });
+
+    /* TEXT SCRAMBLE CLASS */
+    class TextScramble {
+      constructor(el) {
+        this.el = el;
+        this.chars = '!<>-_\\/[]{}—=+*^?#________';
+        this.update = this.update.bind(this);
+      }
+      setText(newText) {
+        const oldText = this.el.innerText;
+        const length = Math.max(oldText.length, newText.length);
+        const promise = new Promise((resolve) => this.resolve = resolve);
+        this.queue = [];
+        for (let i = 0; i < length; i++) {
+          const from = oldText[i] || '';
+          const to = newText[i] || '';
+          const start = Math.floor(Math.random() * 20);
+          const end = start + Math.floor(Math.random() * 20);
+          this.queue.push({ from, to, start, end });
+        }
+        cancelAnimationFrame(this.frameId);
+        this.frame = 0;
+        this.update();
+        return promise;
+      }
+      update() {
+        let output = '';
+        let complete = 0;
+        for (let i = 0, n = this.queue.length; i < n; i++) {
+          let { from, to, start, end, char } = this.queue[i];
+          if (this.frame >= end) {
+            complete++;
+            output += to;
+          } else if (this.frame >= start) {
+            if (!char || Math.random() < 0.28) {
+              char = this.randomChar();
+              this.queue[i].char = char;
+            }
+            output += `<span class="scramble-char">${char}</span>`;
+          } else {
+            output += from;
+          }
+        }
+        this.el.innerHTML = output;
+        if (complete === this.queue.length) {
+          this.resolve();
+        } else {
+          this.frameId = requestAnimationFrame(this.update);
+          this.frame++;
+        }
+      }
+      randomChar() {
+        return this.chars[Math.floor(Math.random() * this.chars.length)];
+      }
+    }
+
+    const scrambleObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const el = entry.target;
+          const originalText = el.getAttribute('data-original') || el.innerText;
+          el.setAttribute('data-original', originalText);
+          const fx = new TextScramble(el);
+          fx.setText(originalText);
+          scrambleObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.scramble-title').forEach(el => scrambleObserver.observe(el));
+
+    /* PARTICLE CANVAS SYSTEM */
+    function initParticles(canvasId, particleCount, speedMultiplier = 1) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let w = canvas.width = canvas.offsetWidth;
+      let h = canvas.height = canvas.offsetHeight;
+
+      window.addEventListener('resize', () => {
+        w = canvas.width = canvas.offsetWidth;
+        h = canvas.height = canvas.offsetHeight;
+      });
+
+      let mouse = { x: null, y: null, radius: 150 };
+      window.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+      window.addEventListener('mouseleave', () => {
+        mouse.x = null;
+        mouse.y = null;
+      });
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * w;
+          this.y = Math.random() * h;
+          this.size = Math.random() * 1.5 + 1;
+          this.vx = (Math.random() - 0.5) * 0.8 * speedMultiplier;
+          this.vy = (Math.random() - 0.5) * 0.8 * speedMultiplier;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+
+          if (this.x < 0 || this.x > w) this.vx *= -1;
+          if (this.y < 0 || this.y > h) this.vy *= -1;
+
+          if (mouse.x !== null && mouse.y !== null) {
+            let dx = this.x - mouse.x;
+            let dy = this.y - mouse.y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < mouse.radius) {
+              let force = (mouse.radius - dist) / mouse.radius;
+              let angle = Math.atan2(dy, dx);
+              this.x += Math.cos(angle) * force * 2;
+              this.y += Math.sin(angle) * force * 2;
+            }
+          }
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(201, 162, 39, 0.6)';
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, w, h);
+        
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            let dx = particles[i].x - particles[j].x;
+            let dy = particles[i].y - particles[j].y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 100) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              let alpha = (100 - dist) / 100 * 0.15;
+              ctx.strokeStyle = `rgba(201, 162, 39, ${alpha})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        animate();
+      } else {
+        // Draw static particles once if motion is disabled
+        particles.forEach(p => p.draw());
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initParticles('hero-canvas', 80, 1);
+      initParticles('manifesto-canvas', 40, 0.4);
+    });
+
+    /* ODOMETER COUNT-UP ANIMATION */
+    const countUpObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.getAttribute('data-target'));
+          const suffix = el.getAttribute('data-suffix') || '';
+          
+          if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            el.innerText = target + suffix;
+            countUpObserver.unobserve(el);
+            return;
+          }
+
+          const duration = 2000; // 2 seconds
+          const startTime = performance.now();
+
+          function updateCount(currentTime) {
+            const elapsedTime = currentTime - startTime;
+            const progress = Math.min(elapsedTime / duration, 1);
+            
+            // easeOutExpo
+            const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            const currentCount = Math.floor(ease * target);
+            el.innerText = currentCount + suffix;
+
+            if (progress < 1) {
+              requestAnimationFrame(updateCount);
+            } else {
+              el.innerText = target + suffix;
+            }
+          }
+
+          requestAnimationFrame(updateCount);
+          countUpObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-num').forEach(el => countUpObserver.observe(el));
+
+    /* PROCESS TIMELINE CONNECTOR DRAW */
+    const processObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const path = document.getElementById('process-path');
+            if (path) {
+              path.style.transition = 'stroke-dashoffset 2.4s cubic-bezier(0.4, 0, 0.2, 1)';
+              path.style.strokeDashoffset = '0';
+            }
+            
+            document.querySelectorAll('.process-step').forEach((step, idx) => {
+              setTimeout(() => {
+                step.classList.add('bounce-in');
+              }, idx * 400);
+            });
+          } else {
+            document.querySelectorAll('.process-step').forEach(step => step.classList.add('bounce-in'));
+          }
+          processObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const processSection = document.getElementById('process');
+    if (processSection) processObserver.observe(processSection);
+
+    /* TESTIMONIALS CAROUSEL SNAP-SCROLL */
+    function scrollCarousel(direction) {
+      const carousel = document.getElementById('t-carousel');
+      if (carousel) {
+        const cardWidth = carousel.firstElementChild.offsetWidth + 24; // width + gap
+        carousel.scrollBy({
+          left: direction * cardWidth,
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    /* MAGNETIC CURSOR SCRIPT */
+    const cursor = document.getElementById('custom-cursor');
+    const ring = document.getElementById('custom-cursor-ring');
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      if (cursor) {
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+      }
+    });
+
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      
+      if (ring) {
+        ring.style.left = ringX + 'px';
+        ring.style.top = ringY + 'px';
+      }
+      
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // Hover Scaling effect
+    document.querySelectorAll('a, button, select, input, textarea, .lang-btn, .service-card-wrapper').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        if (cursor) cursor.classList.add('hovered');
+        if (ring) ring.classList.add('hovered');
+      });
+      el.addEventListener('mouseleave', () => {
+        if (cursor) cursor.classList.remove('hovered');
+        if (ring) ring.classList.remove('hovered');
+      });
+    });
+
+    /* FORM SUBMISSION AND TRANSLATION SYSTEM */
+    const translations = {
+      he: {
+        "firm-name": "חורי ושות' — עורכי דין",
+        "firm-sub": "כפר כנא, ישראל",
+        "nav-about": "אודות",
+        "nav-services": "שירותים",
+        "nav-partners": "עורכי הדין",
+        "nav-contact": "צור קשר",
+        "mob-about": "אודות",
+        "mob-services": "שירותים",
+        "mob-partners": "עורכי הדין",
+        "mob-contact": "צור קשר",
+        "hero-tag": "משרד עורכי דין | כפר כנא",
+        "hero-h1": '<span class="hero-word">אתם</span> <span class="hero-word">מדברים.</span><br><span class="hero-word">אנחנו</span> <span class="hero-word">שומעים.</span><br><span class="hero-word"><em>הם</em></span> <span class="hero-word"><em>משלמים.</em></span>',
+        "hero-sub": "משרד חורי ושות׳ — שני עורכי דין מנוסים, מומחיות רחבה, ליווי אישי ובלתי מתפשר. מכפר כנא, עם ייצוג בכל רחבי ישראל.",
+        "cta1": "צרו קשר",
+        "cta2": "סיוע דחוף — WhatsApp",
+        "t1": "שנות ניסיון",
+        "t2": "תיקים",
+        "t3": "מומחים",
+        "badge-t": "ייצוג מהימן",
+        "badge-s": "ישראל רחבה",
+        "as1": "שנות ניסיון",
+        "as2": "תיקים",
+        "as3": "תחומי מומחיות",
+        "as4": "שותפים",
+        "about-tag": "אודות המשרד",
+        "about-title": "ידע. ניסיון.<br>תוצאות.",
+        "about-body": "משרד חורי ושות׳ הינו משרד עורכי דין בוטיק ממוקם בכפר כנא, המשרת לקוחות פרטיים, עסקיים ומסחריים בכל רחבי ישראל. המשרד מתמחה במגוון רחב של תחומים משפטיים תוך מחויבות עמוקה לשירות אישי, מהיר ומדויק.",
+        "v1": "שירות אישי",
+        "v2": "ניסיון מוכח",
+        "v3": "זמינות 24/7",
+        "v4": "שיקול דעת מוחלט",
+        "v5": "תמחור הוגן",
+        "about-quote": "אתם מדברים. אנחנו שומעים. הם משלמים. — זה לא סיסמה, זו הבטחה שאנחנו מקיימים בכל תיק ותיק.",
+        "about-cite": "— עו\"ד רמי חורי ועו\"ד וליד חורי",
+        "manifesto-eyebrow": "ההבטחה שלנו",
+        "manifesto-he": "אתם מדברים. אנחנו שומעים. הם משלמים.",
+        "manifesto-ar": "أنتم تتحدثون. ونحن نستمع. وهم يدفعون.",
+        "manifesto-en": "You talk. We listen. They pay.",
+        "services-tag": "תחומי עיסוק",
+        "services-title": "השירותים שלנו",
+        "services-cta": "לייעוץ ראשוני ←",
+        "s1t": "עסקאות נדל\"ן",
+        "s1p": "ליווי משפטי מלא בעסקאות רכישה ומכירה של נדל\"ן, רישום בטאבו, ובדיקות נאותות.",
+        "s2t": "ירושה וצוואות",
+        "s2p": "ייעוץ ועריכת צוואות, ניהול עיזבונות, ייצוג בהליכי ירושה ופניות לרשם הירושות.",
+        "s3t": "חוק שירותי תעופה",
+        "s3p": "תביעות פיצוי על ביטול טיסות, עיכובים ואי-עלייה על מטוס. ניסיון מוכח בזכיית פיצויים.",
+        "s4t": "בנקאות ודיני בנקאות",
+        "s4p": "ייצוג מול בנקים, סכסוכי אשראי, ערעורים על החלטות בנקאיות ועוד.",
+        "s5t": "הוצאה לפועל",
+        "s5p": "ניהול תיקי הוצאה לפועל, גביית חובות, הגנה מפני עיקולים וביצוע פסקי דין.",
+        "s6t": "חדלות פירעון ופשיטת רגל",
+        "s6p": "ייעוץ וייצוג בהליכי חדלות פירעון, פשיטת רגל ושיקום פיננסי.",
+        "s7t": "תרגום מקצועי ואישורים",
+        "s7p": "תרגום מסמכים משפטיים, אישור תעודות, ונוטריון לכל סוגי המסמכים הרשמיים.",
+        "s8t": "ייעוץ עסקי ומסחרי",
+        "s8p": "חוזים עסקיים, הסכמי שותפות, ייסוד חברות, וליווי עסקים קטנים ובינוניים.",
+        "s-cta-text-1": "לפרטים נוספים ←",
+        "s-cta-text-2": "לפרטים נוספים ←",
+        "s-cta-text-3": "לפרטים נוספים ←",
+        "s-cta-text-4": "לפרטים נוספים ←",
+        "s-cta-text-5": "לפרטים נוספים ←",
+        "s-cta-text-6": "לפרטים נוספים ←",
+        "s-cta-text-7": "לפרטים נוספים ←",
+        "s-cta-text-8": "לפרטים נוספים ←",
+        "process-tag": "תהליך העבודה",
+        "process-title": "איך אנחנו עובדים",
+        "step1-t": "פגישת ייעוץ",
+        "step1-d": "הבנת הצרכים שלכם, ניתוח ראשוני והערכת סיכויי ההצלחה.",
+        "step2-t": "אסטרטגיה",
+        "step2-d": "בניית תוכנית פעולה משפטית ייחודית ומותאמת עבורכם.",
+        "step3-t": "לחימה וייצוג",
+        "step3-d": "עמידה איתנה וייצוג חסר פשרות בערכאות השיפוטיות ומול הצד השני.",
+        "step4-t": "התוצאה הרצויה",
+        "step4-d": "השגת הפיצוי או התוצאה המשפטית הטובה ביותר עבורכם.",
+        "partners-tag": "עורכי הדין",
+        "partners-title": "הכירו את הצוות",
+        "partners-sub": "שני עורכי דין. התמחויות משלימות. תוצאות שמדברות בעד עצמן.",
+        "p1-badge": "שותף מייסד",
+        "p1-name": "עו\"ד רמי חורי",
+        "p1-role": "ייצוג משפטי כללי | שותף בכיר",
+        "p1-bio": "עו\"ד רמי חורי הוא עורך הדין הבכיר של המשרד, המתמחה במגוון רחב של תחומי משפט אזרחי ומסחרי. בעל ניסיון רב בליווי לקוחות פרטיים ועסקיים, עו\"ד חורי מפגין מחויבות יוצאת דופן לתוצאות ויחס אישי חם לכל מקרה. הסיסמה המפורסמת שלו — \"You Talk, We Listen, They Pay\" — מסכמת את גישתו הפשוטה: הלקוח מדבר, המשרד פועל.",
+        "p2-badge": "מקרקעין",
+        "p2-name": "עו\"ד וליד חורי",
+        "p2-role": "מומחה מקרקעין | שותף",
+        "p2-bio": "עו\"ד וליד חורי הוא המומחה המוביל של המשרד בתחום המקרקעין והנדל\"ן. ניסיונו הרב בעסקאות נדל\"ן מורכבות, רישומים בטאבו, וסכסוכי קרקע הופך אותו לאחד מבעלי ידע עמוק ביותר בתחום זה באזור. לקוחות מכפר כנא ומכל הצפון פונים אליו לקבלת ייעוץ אמין ומדויק.",
+        "testimonials-tag": "המלצות לקוחות",
+        "testimonials-title": "מה לקוחות אומרים",
+        "btn-write-review": "כתיבת חוות דעת",
+        "review-modal-title": "כתבו חוות דעת",
+        "review-label-name": "שם מלא",
+        "review-label-area": "תחום השירות",
+        "review-label-comment": "חוות דעתכם",
+        "review-submit-text": "שליחת חוות דעת",
+        "review-success-title": "תודה רבה!",
+        "review-success-msg": "חוות הדעת שלך נשלחה בהצלחה ותוצג באתר לאחר אישור מנהל המשרד.",
+        "t1-quote": '\"שירות יוצא מן הכלל. עו\"ד רמי חורי ייצג אותי בתביעת פיצויים מול חברת התעופה והשיג לי את המקסימום. מומלץ בחום!\"',
+        "t1-auth": "אריאל כהן",
+        "t1-sub": "חוק שירותי תעופה",
+        "t2-quote": '\"וליד חורי הוא מקצוען אמיתי במקרקעין. הוא ליווה אותנו ברכישת הדירה הראשונה ברוגע, סבלנות וידע עצום.\"',
+        "t2-auth": "שרה לוי",
+        "t2-sub": "עסקת נדל\"ן",
+        "t3-quote": '\"الخدمة ممتازة والتعامل راقٍ جداً. المحامي رامي خوري ساعدني في قضية تجارية معقدة وحققنا نجاحاً كبيراً.\"',
+        "t3-auth": "أحمد مصاروة",
+        "t3-sub": "ייעוץ עסקי",
+        "t4-quote": '\"أنصح بشدة بالتعامل مع مكتب خوري. المحامي وليد خوري خبير حقيقي في شؤون الأراضي والعقارات في منطقة الشمال.\"',
+        "t4-auth": "يوسف كنانة",
+        "t4-sub": "סכסוך מקרקעין",
+        "t5-quote": '\"Khoury Law Office provided outstanding service during my bankruptcy process. They were responsive, professional, and kept me informed every step of the way.\"',
+        "t5-auth": "David Miller",
+        "t5-sub": "חדלות פירעון",
+        "lname": "שם מלא",
+        "lphone": "טלפון",
+        "lemail": "דואר אלקטרוני",
+        "ltype": "תחום הפנייה",
+        "ldesc": "תיאור הנושא",
+        "sbtn": "שלחו פנייה",
+        "succ-h": "הפנייה נשלחה!",
+        "succ-s": "נחזור אליכם בהקדם האפשרי.",
+        "cl1": "עו\"ד רמי חורי",
+        "cl2": "עו\"ד וליד חורי",
+        "cl3": "מייל",
+        "cl4": "מיקום",
+        "addr-text": "כפר כנא, ישראל",
+        "footer-name": "חורי ושות' — עורכי דין",
+        "footer-sub2": "כפר כנא, ישראל",
+        "footer-desc": "משרד עורכי דין בוטיק עם מחויבות עמוקה לתוצאות. שני שותפים. מומחיות רחבה. שירות אישי.",
+        "fc1h": "שירותים",
+        "fc2h": "יצירת קשר",
+        "footer-copy": "© 2025 חורי — עורכי דין | כל הזכויות שמורות",
+        "priv": "מדיניות פרטיות",
+        "terms": "תנאי שימוש",
+        "wa-txt": "WhatsApp עכשיו",
+        "wa-tip": "סיוע דחוף — זמין"
+      },
+      ar: {
+        "firm-name": "خوري وشركاؤه — محامون",
+        "firm-sub": "كفر كنا، إسرائيل",
+        "nav-about": "حول المكتب",
+        "nav-services": "الخدمات",
+        "nav-partners": "المحامون",
+        "nav-contact": "اتصل بنا",
+        "mob-about": "حول المكتب",
+        "mob-services": "الخدمات",
+        "mob-partners": "المحامون",
+        "mob-contact": "اتصل بنا",
+        "hero-tag": "مكتب محاماة | كفر كنا",
+        "hero-h1": '<span class="hero-word">أنتم</span> <span class="hero-word">تتحدثون.</span><br><span class="hero-word">ونحن</span> <span class="hero-word">نستمع.</span><br><span class="hero-word"><em>وهم</em></span> <span class="hero-word"><em>يدفعون.</em></span>',
+        "hero-sub": "مكتب خوري وشركاؤه — محاميان ذوا خبرة واسعة، تخصصات متعددة، ومرافقة شخصية ومهنية غير مساومة. من كفر كنا، ونمثلكم في جميع أنحاء البلاد.",
+        "cta1": "اتصل بنا",
+        "cta2": "مساعدة عاجلة — WhatsApp",
+        "t1": "سنوات خبرة",
+        "t2": "قضية معالجة",
+        "t3": "شركاء",
+        "badge-t": "تمثيل موثوق",
+        "badge-s": "تغطية قطرية",
+        "as1": "سنوات خبرة",
+        "as2": "قضية معالجة",
+        "as3": "مجالات التخصص",
+        "as4": "شركاء",
+        "about-tag": "نبذة عن المكتب",
+        "about-title": "المعرفة. الخبرة.<br>النتائج.",
+        "about-body": "مكتب خوري وشركاؤه هو مكتب محاماة بوتيك يقع في كفر كنا، ويخدم العملاء من الأفراد والشركات في جميع أنحاء إسرائيل. يتخصص المكتب في مجموعة واسعة من المجالات القانونية مع التزام عميق بالخدمة الشخصية والسريعة والدقيقة.",
+        "v1": "خدمة شخصية",
+        "v2": "خبرة مثبتة",
+        "v3": "جاهزية تامة",
+        "v4": "سرية مطلقة",
+        "v5": "أسعار عادلة",
+        "about-quote": "أنتم تتحدثون. ونحن نستمع. وهم يدفعون. — هذا ليس مجرد شعار، بل هو وعد نلتزم به في كل قضية.",
+        "about-cite": "— المحامي رامي خوري والمحامي وليد خوري",
+        "manifesto-eyebrow": "وعدنا القانوني",
+        "manifesto-he": "אתם מדברים. אנחנו שומעים. הם משלמים.",
+        "manifesto-ar": "أنتم تتحدثون. ونحن نستمع. وهم يدفعون.",
+        "manifesto-en": "You talk. We listen. They pay.",
+        "services-tag": "مجالات العمل",
+        "services-title": "الخدمات التي نقدمها",
+        "services-cta": "للاستشارة الأولية ←",
+        "s1t": "عقارات وأراضي",
+        "s1p": "مرافقة قانونية كاملة في صفقات البيع والشراء العقاري، التسجيل في الطابو، والفحص النافي للجهالة.",
+        "s2t": "الميراث والوصايا",
+        "s2p": "استشارات وصياغة الوصايا، إدارة الميراث والتركات، والتمثيل أمام مسجل الميراث.",
+        "s3t": "قانون خدمات الطيران",
+        "s3p": "مطالبات التعويض عن إلغاء الرحلات الجوية، التأخير، ومنع الصعود للطائرة. خبرة مثبتة في تحصيل التعويضات.",
+        "s4t": "البنوك والقوانين المصرفية",
+        "s4p": "التمثيل أمام البنوك، نزاعات الائتمان، الاستئناف على القرارات المصرفية وغيرها.",
+        "s5t": "دائرة الإجراء والتنفيذ",
+        "s5p": "إدارة ملفات دائرة التنفيذ، تحصيل الديون، الحماية من الحجوزات، وتنفيذ الأحكام القضائية.",
+        "s6t": "الإعسار والإفلاس",
+        "s6p": "تقديم الاستشارات والتمثيل في إجراءات الإعسار، الإفلاس وإعادة التأهيل المالي.",
+        "s7t": "الترجمة والتوثيق",
+        "s7p": "ترجمة المستندات القانونية، تصديق الشهادات، والخدمات الموثقة لجميع أنواع المستندات الرسمية.",
+        "s8t": "الاستشارات التجارية",
+        "s8p": "العقود التجارية، اتفاقيات الشراكة، تأسيس الشركات، ومرافقة المصالح التجارية الصغيرة والمتوسطة.",
+        "s-cta-text-1": "المزيد من التفاصيل ←",
+        "s-cta-text-2": "المزيد من التفاصيل ←",
+        "s-cta-text-3": "المزيد من التفاصيل ←",
+        "s-cta-text-4": "المزيد من التفاصيل ←",
+        "s-cta-text-5": "المزيد من التفاصيل ←",
+        "s-cta-text-6": "المزيد من التفاصيل ←",
+        "s-cta-text-7": "المزيد من التفاصيل ←",
+        "s-cta-text-8": "المزيد من التفاصيل ←",
+        "process-tag": "مجالات العمل",
+        "process-title": "كيف نعمل",
+        "step1-t": "جلسة الاستشارة",
+        "step1-d": "فهم احتياجاتكم، تحليلات أولية وتقييم فرص النجاح.",
+        "step2-t": "الاستراتيجية",
+        "step2-d": "بناء خطة عمل قانونية خاصة ومصممة بدقة لأجلكم.",
+        "step3-t": "المرافعة والتمثيل",
+        "step3-d": "موقف حازم ودفاع مستميت أمام المحاكم والجهات المختلفة.",
+        "step4-t": "النتيجة المرجوة",
+        "step4-d": "الحصول على التعويضات أو أفضل القرارات القانونية لصالحكم.",
+        "partners-tag": "المحامون",
+        "partners-title": "تعرفوا على الطاقم",
+        "partners-sub": "محاميان. تخصصات متكاملة. نتائج تتحدث عن نفسها.",
+        "p1-badge": "شريك مؤسس",
+        "p1-name": "المحامي رامي خوري",
+        "p1-role": "تمثيل قانوني عام | شريك أول",
+        "p1-bio": "المحامي رامي خوري هو المحامي الأول في المكتب، ويتخصص في مجموعة واسعة من مجالات القانون المدني والتجاري. يتمتع بخبرة واسعة في مرافقة العملاء من الأفراد والشركات، ويبدي التزاماً استثنائياً بالنتائج والمعاملة الشخصية الدافئة لكل قضية. شعاره الشهير — \"أنتم تتكلمون، ونحن نستمع، وهم يدفعون\" — يلخص نهجه البسيط: العميل يتحدث، والمكتب يعمل.",
+        "p2-badge": "عقارات وأراضي",
+        "p2-name": "المحامي وليد خوري",
+        "p2-role": "أخصائي عقارات | شريك",
+        "p2-bio": "المحامي وليد خوري هو الخبير الرائد في المكتب في مجال العقارات والأراضي. خبرته الطويلة في صفقات العقارات المعقدة، والتسجيل في الطابو، ونزاعات الأراضي تجعله واحداً من أصحاب المعرفة الأعمق في هذا المجال بالمنطقة. يتوجه إليه العملاء من كفر كنا وكل الشمال للحصول على استشارة موثوقة ودقيقة.",
+        "testimonials-tag": "آراء العملاء",
+        "testimonials-title": "ماذا يقول عملاؤنا",
+        "btn-write-review": "كتابة مراجعة",
+        "review-modal-title": "اكتب مراجعتك",
+        "review-label-name": "الاسم الكامل",
+        "review-label-area": "مجال الخدمة",
+        "review-label-comment": "رأيكم يهمنا",
+        "review-submit-text": "إرسال المراجعة",
+        "review-success-title": "شكراً جزيلًا!",
+        "review-success-msg": "تم إرسال مراجعك بنجاح وستظهر على الموقع بعد موافقة إدارة المكتب.",
+        "t1-quote": '\"شغل ممتاز جداً. المحامي رامي خوري مثلني بقضية تعويضات أمام شركة الطيران وحققنا أقصى تعويض ممكن. أنصح به بشدة!\"',
+        "t1-auth": "أريئيل كوهين",
+        "t1-sub": "قانون خدمات الطيران",
+        "t2-quote": '\"وليد خوري مهني وخبير رائع في العقارات والأراضي. رافقنا بشراء بيتنا الأول بصبر وهدوء تام.\"',
+        "t2-auth": "سارة ليفي",
+        "t2-sub": "صفقة عقارية",
+        "t3-quote": '\"الخدمة ممتازة والتعامل راقٍ جداً. المحامي رامي خوري ساعدني في قضية تجارية معقدة وحققنا نجاحاً كبيراً.\"',
+        "t3-auth": "أحمد مصاروة",
+        "t3-sub": "استشارات تجارية",
+        "t4-quote": '\"أنصح بشدة بالتعامل مع مكتب خوري. المحامي وليد خوري خبير حقيقي في شؤون الأراضي والعقارات في منطقة الشمال.\"',
+        "t4-auth": "يوسف كنانة",
+        "t4-sub": "نزاع أراضي وعقارات",
+        "t5-quote": '\"Khoury Law Office provided outstanding service during my bankruptcy process. They were responsive, professional, and kept me informed every step of the way.\"',
+        "t5-auth": "دافيد ميلر",
+        "t5-sub": "قضايا الإعسار والإفلاس",
+        "lname": "الاسم الكامل",
+        "lphone": "رقم الهاتف",
+        "lemail": "البريد الإلكتروني",
+        "ltype": "مجال الاستشارة",
+        "ldesc": "تفاصيل الطلب",
+        "sbtn": "إرسال الطلب",
+        "succ-h": "تم إرسال طلبكم بنجاح!",
+        "succ-s": "سنتواصل معكم في أقرب وقت ممكن.",
+        "cl1": "المحامي رامي خوري",
+        "cl2": "المحامي وليد خوري",
+        "cl3": "البريد الإلكتروني",
+        "cl4": "العنوان",
+        "addr-text": "كفر كنا، إسرائيل",
+        "footer-name": "خوري وشركاؤه — محامون",
+        "footer-sub2": "كفر كنا، إسرائيل",
+        "footer-desc": "مكتب محاماة بوتيك مع التزام عميق بالنتائج. شريكان. خبرة واسعة. خدمة شخصية.",
+        "fc1h": "الخدمات",
+        "fc2h": "اتصل بنا",
+        "footer-copy": "© 2025 خوري — محامون | جميع الحقوق محفوظة",
+        "priv": "سياسة الخصوصية",
+        "terms": "شروط الاستخدام",
+        "wa-txt": "واتساب الآن",
+        "wa-tip": "مساعدة عاجلة — متاح"
+      },
+      en: {
+        "firm-name": "Khoury & Co. — Law Firm",
+        "firm-sub": "Kafr Kanna, Israel",
+        "nav-about": "About",
+        "nav-services": "Services",
+        "nav-partners": "Attorneys",
+        "nav-contact": "Contact",
+        "mob-about": "About",
+        "mob-services": "Services",
+        "mob-partners": "Attorneys",
+        "mob-contact": "Contact",
+        "hero-tag": "Law Office | Kafr Kanna",
+        "hero-h1": '<span class="hero-word">You</span> <span class="hero-word">speak.</span><br><span class="hero-word">We</span> <span class="hero-word">listen.</span><br><span class="hero-word"><em>They</em></span> <span class="hero-word"><em>pay.</em></span>',
+        "hero-sub": "Khoury & Co. Law Firm — two experienced attorneys, broad expertise, personal and uncompromising representation. Based in Kafr Kanna, serving clients nationwide.",
+        "cta1": "Contact Us",
+        "cta2": "Urgent Help — WhatsApp",
+        "t1": "Years of Experience",
+        "t2": "Cases Handled",
+        "t3": "Partners",
+        "badge-t": "Trusted Counsel",
+        "badge-s": "Nationwide Israel",
+        "as1": "Years of Experience",
+        "as2": "Cases Resolved",
+        "as3": "Specialties",
+        "as4": "Partners",
+        "about-tag": "About the Firm",
+        "about-title": "Knowledge. Experience.<br>Results.",
+        "about-body": "Khoury & Co. is a boutique law firm located in Kafr Kanna, serving private, corporate, and commercial clients throughout Israel. The firm specializes in a wide range of legal fields with a deep commitment to personal, responsive, and precise service.",
+        "v1": "Personal Service",
+        "v2": "Proven Experience",
+        "v3": "24/7 Availability",
+        "v4": "Absolute Discretion",
+        "v5": "Fair Pricing",
+        "about-quote": "You talk. We listen. They pay. — This is not just a slogan, it is a promise we keep in every single case.",
+        "about-cite": "— Adv. Rami Khoury & Adv. Walid Khoury",
+        "manifesto-eyebrow": "Our Promise",
+        "manifesto-he": "אתם מדברים. אנחנו שומעים. הם משלמים.",
+        "manifesto-ar": "أنتم تتحدثون. ونحن نستمع. وهم يدفعون.",
+        "manifesto-en": "You talk. We listen. They pay.",
+        "services-tag": "Practice Areas",
+        "services-title": "Our Services",
+        "services-cta": "Initial Consultation ←",
+        "s1t": "Real Estate Transactions",
+        "s1p": "Full legal representation in buying and selling properties, Land Registry (Tabu) registration, and due diligence.",
+        "s2t": "Wills & Inheritance",
+        "s2p": "Drafting wills, estate administration, and representation before the Registrar of Inheritance.",
+        "s3t": "Aviation Law",
+        "s3p": "Claims for flight cancellations, delays, and denied boarding. Proven track record in securing compensation.",
+        "s4t": "Banking Law",
+        "s4p": "Representation against banks, credit disputes, and appeals against financial institutional decisions.",
+        "s5t": "Execution Office",
+        "s5p": "Managing execution files, debt collection, defense against foreclosure, and enforcement of judgments.",
+        "s6t": "Insolvency & Bankruptcy",
+        "s6p": "Counsel and representation in insolvency proceedings, bankruptcy, and financial rehabilitation.",
+        "s7t": "Legal Translation & Certifications",
+        "s7p": "Translation of legal documents, certification of transcripts, and notary services for official documents.",
+        "s8t": "Commercial & Corporate Law",
+        "s8p": "Business contracts, partnership agreements, company registration, and counsel for small-to-medium businesses.",
+        "s-cta-text-1": "More Details ←",
+        "s-cta-text-2": "More Details ←",
+        "s-cta-text-3": "More Details ←",
+        "s-cta-text-4": "More Details ←",
+        "s-cta-text-5": "More Details ←",
+        "s-cta-text-6": "More Details ←",
+        "s-cta-text-7": "More Details ←",
+        "s-cta-text-8": "More Details ←",
+        "process-tag": "Our Process",
+        "process-title": "How We Work",
+        "step1-t": "Consultation",
+        "step1-d": "Understanding your needs, preliminary analysis and assessment of success probability.",
+        "step2-t": "Strategy",
+        "step2-d": "Building a custom legal roadmap tailored specifically to your objectives.",
+        "step3-t": "Litigation & Defense",
+        "step3-d": "Providing strong advocacy and uncompromising representation in court and negotiations.",
+        "step4-t": "Desired Outcome",
+        "step4-d": "Securing the maximum compensation or best possible legal resolution for you.",
+        "partners-tag": "Attorneys",
+        "partners-title": "Meet the Team",
+        "partners-sub": "Two attorneys. Complementary expertise. Results that speak for themselves.",
+        "p1-badge": "Founding Partner",
+        "p1-name": "Adv. Rami Khoury",
+        "p1-role": "General Legal Representation | Senior Partner",
+        "p1-bio": "Adv. Rami Khoury is the senior lawyer of the firm, specializing in a wide range of civil and commercial law fields. With extensive experience in guiding private and business clients, Adv. Khoury shows an extraordinary commitment to results and warm personal attention to each case. His famous motto — \"You Talk, We Listen, They Pay\" — summarizes his simple approach: the client speaks, the firm acts.",
+        "p2-badge": "Real Estate",
+        "p2-name": "Adv. Walid Khoury",
+        "p2-role": "Real Estate Specialist | Partner",
+        "p2-bio": "Adv. Walid Khoury is the firm's leading specialist in real estate and property law. His vast experience in complex property transactions, Land Registry (Tabu) registrations, and land disputes makes him one of the most knowledgeable attorneys in this field in the region. Clients from Kafr Kanna and the entire North turn to him for reliable and precise counsel.",
+        "testimonials-tag": "Testimonials",
+        "testimonials-title": "What Clients Say",
+        "btn-write-review": "Write a Review",
+        "review-modal-title": "Write a Review",
+        "review-label-name": "Full Name",
+        "review-label-area": "Practice Area",
+        "review-label-comment": "Your Review",
+        "review-submit-text": "Submit Review",
+        "review-success-title": "Thank you!",
+        "review-success-msg": "Your review has been successfully submitted and will be displayed on the site after approval by the firm's administrator.",
+        "t1-quote": '\"Outstanding service. Adv. Rami Khoury represented me in a flight cancellation claim against an airline and got me the maximum compensation. Highly recommended!\"',
+        "t1-auth": "Ariel Cohen",
+        "t1-sub": "Aviation Claims Client",
+        "t2-quote": '\"Walid Khoury is a true real estate professional. He guided us through our first home purchase with calm, patience, and immense knowledge.\"',
+        "t2-auth": "Sarah Levi",
+        "t2-sub": "Property Transaction Client",
+        "t3-quote": '\"The service is excellent and very professional. Adv. Rami Khoury helped me with a complex commercial dispute and we achieved a major success.\"',
+        "t3-auth": "Ahmad Masarwa",
+        "t3-sub": "Corporate Dispute Client",
+        "t4-quote": '\"I highly recommend Khoury Law Office. Adv. Walid Khoury is a real expert in land and property registration in the North region.\"',
+        "t4-auth": "Yousef Kananeh",
+        "t4-sub": "Land Registration Client",
+        "t5-quote": '\"Khoury Law Office provided outstanding service during my bankruptcy process. They were responsive, professional, and kept me informed every step of the way.\"',
+        "t5-auth": "David Miller",
+        "t5-sub": "Insolvency Client",
+        "lname": "Full Name",
+        "lphone": "Phone Number",
+        "lemail": "Email Address",
+        "ltype": "Practice Area",
+        "ldesc": "Description",
+        "sbtn": "Send Request",
+        "succ-h": "Request Sent!",
+        "succ-s": "We will get back to you as soon as possible.",
+        "cl1": "Adv. Rami Khoury",
+        "cl2": "Adv. Walid Khoury",
+        "cl3": "Email",
+        "cl4": "Location",
+        "addr-text": "Kafr Kanna, Israel",
+        "footer-name": "Khoury & Co. — Law Firm",
+        "footer-sub2": "Kafr Kanna, Israel",
+        "footer-desc": "Boutique law firm with a deep commitment to results. Two partners. Broad expertise. Personal service.",
+        "fc1h": "Services",
+        "fc2h": "Contact",
+        "footer-copy": "© 2025 Khoury — Law Firm | All Rights Reserved",
+        "priv": "Privacy Policy",
+        "terms": "Terms of Use",
+        "wa-txt": "WhatsApp Now",
+        "wa-tip": "Urgent Assistance — Available"
+      }
+    };
+
+    const placeholders = {
+      he: {
+        name: "ישראל ישראלי",
+        phone: "052-000-0000",
+        email: "you@example.com",
+        desc: "ספרו לנו בקצרה...",
+        reviewName: "השם שלך",
+        reviewComment: "ספרו על השירות שקיבלתם..."
+      },
+      ar: {
+        name: "الاسم الكامل",
+        phone: "052-000-0000",
+        email: "you@example.com",
+        desc: "أخبرنا باختصار عن طلبك...",
+        reviewName: "اسمك الكريم",
+        reviewComment: "اكتب مراجعتك هنا..."
+      },
+      en: {
+        name: "John Doe",
+        phone: "052-000-0000",
+        email: "you@example.com",
+        desc: "Tell us briefly about your case...",
+        reviewName: "Your Name",
+        reviewComment: "Tell us about your experience..."
+      }
+    };
+
+    const selectOptions = {
+      he: [
+        "-- בחרו --",
+        "נדל\"ן ומקרקעין",
+        "ירושה וצוואה",
+        "חוק תעופה",
+        "הוצאה לפועל",
+        "בנקאות",
+        "חדלות פירעון",
+        "תרגום ואישורים",
+        "עסקי ומסחרי",
+        "אחר"
+      ],
+      ar: [
+        "-- اختر --",
+        "عقارات وأراضي",
+        "الوصايا والميراث",
+        "قانون الطيران",
+        "دائرة التنفيذ والإجراء",
+        "البنوك والقوانين المصرفية",
+        "الإعسار والإفلاس",
+        "الترجمة والتوثيق",
+        "الاستشارات التجارية والشركات",
+        "آخر"
+      ],
+      en: [
+        "-- Select Area --",
+        "Real Estate & Property",
+        "Wills & Inheritance",
+        "Aviation Law",
+        "Execution Office",
+        "Banking Law",
+        "Insolvency & Bankruptcy",
+        "Legal Translation & Notary",
+        "Commercial & Corporate Law",
+        "Other"
+      ]
+    };
+
+    function setLang(lang) {
+      localStorage.setItem('preferredLang', lang);
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      const btnIdx = lang === 'he' ? 0 : (lang === 'ar' ? 1 : 2);
+      const activeBtn = document.querySelectorAll('.lang-btn')[btnIdx];
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const body = document.getElementById('site');
+      if (lang === 'en') {
+        body.classList.add('ltr');
+        document.documentElement.setAttribute('dir', 'ltr');
+        document.documentElement.setAttribute('lang', 'en');
+      } else {
+        body.classList.remove('ltr');
+        document.documentElement.setAttribute('dir', 'rtl');
+        document.documentElement.setAttribute('lang', lang);
+      }
+
+      const strings = translations[lang];
+      for (const id in strings) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.innerHTML = strings[id];
+          if (el.classList.contains('scramble-title')) {
+            el.setAttribute('data-original', el.innerText);
+          }
+        }
+      }
+
+      const pl = placeholders[lang];
+      const nameInput = document.getElementById('input-name');
+      if (nameInput) nameInput.setAttribute('placeholder', pl.name);
+      const phoneInput = document.getElementById('input-phone');
+      if (phoneInput) phoneInput.setAttribute('placeholder', pl.phone);
+      const emailInput = document.getElementById('input-email');
+      if (emailInput) emailInput.setAttribute('placeholder', pl.email);
+      const descInput = document.getElementById('input-desc');
+      if (descInput) descInput.setAttribute('placeholder', pl.desc);
+
+      const reviewNameInput = document.getElementById('review-name');
+      if (reviewNameInput) reviewNameInput.setAttribute('placeholder', pl.reviewName);
+      const reviewCommentInput = document.getElementById('review-comment');
+      if (reviewCommentInput) reviewCommentInput.setAttribute('placeholder', pl.reviewComment);
+
+      const selectEl = document.getElementById('form-select');
+      if (selectEl) {
+        const opts = selectOptions[lang];
+        selectEl.innerHTML = '';
+        opts.forEach(optText => {
+          const option = document.createElement('option');
+          option.textContent = optText;
+          selectEl.appendChild(option);
+        });
+      }
+
+      const reviewSelectEl = document.getElementById('review-practice-area');
+      if (reviewSelectEl) {
+        const opts = selectOptions[lang];
+        reviewSelectEl.innerHTML = '';
+        opts.forEach(optText => {
+          const option = document.createElement('option');
+          option.textContent = optText;
+          reviewSelectEl.appendChild(option);
+        });
+      }
+
+      if (loadedReviews && loadedReviews.length > 0) {
+        renderReviews(lang);
+      }
+    }
+
+    // Initialize Supabase Client Configuration
+    const SUPABASE_URL = "https://sxhiuqkrzxurybfxkuvd.supabase.co";
+    const SUPABASE_ANON_KEY = "sb_publishable_e3mYA8gzUkHPheNcRJTsmQ_7EnN9Gk4";
+    let supabaseClient = null;
+
+    /* AJAX FORM SUBMISSION SCRIPT */
+    async function submitForm() {
+      if (!supabaseClient && window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+      const name = document.getElementById('input-name').value.trim();
+      const phone = document.getElementById('input-phone').value.trim();
+      const email = document.getElementById('input-email').value.trim();
+      const selectEl = document.getElementById('form-select');
+      const area = selectEl ? selectEl.value : '';
+      const desc = document.getElementById('input-desc').value.trim();
+
+      const currentLang = localStorage.getItem('preferredLang') || 'he';
+
+      const valMessages = {
+        he: {
+          name: "אנא הזן שם מלא.",
+          contact: "אנא הזן טלפון או דואר אלקטרוני ליצירת קשר.",
+          desc: "אנא הזן את תיאור הפנייה.",
+          sending: "שולח...",
+          error: "ארעה שגיאה בשליחת הפנייה. אנא נסו שנית או פנו ישירות בטלפון או וואטסאפ."
+        },
+        ar: {
+          name: "يرجى إدخال الاسم الكامل.",
+          contact: "يرجى إدخال رقم الهاتف أو البريد الإلكتروني للتواصل.",
+          desc: "يرجى إدخال تفاصيل الطلب.",
+          sending: "جاري الإرسال...",
+          error: "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى أو الاتصال بنا مباشرة عبر الهاتف أو الواتساب."
+        },
+        en: {
+          name: "Please enter your full name.",
+          contact: "Please enter either a phone number or email address.",
+          desc: "Please enter the description of your case.",
+          sending: "Sending...",
+          error: "An error occurred while sending the request. Please try again or contact us directly via phone or WhatsApp."
+        }
+      };
+
+      const msg = valMessages[currentLang];
+
+      if (!name) {
+        alert(msg.name);
+        return;
+      }
+      if (!phone && !email) {
+        alert(msg.contact);
+        return;
+      }
+      if (!desc) {
+        alert(msg.desc);
+        return;
+      }
+
+      const submitBtn = document.querySelector('.form-submit');
+      const submitBtnText = document.getElementById('sbtn');
+      const originalText = submitBtnText ? submitBtnText.innerHTML : '';
+
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitBtnText) submitBtnText.innerHTML = msg.sending;
+
+      try {
+        if (!supabaseClient) {
+          throw new Error('Supabase client is not initialized.');
+        }
+
+        // 1. Insert inquiry into Supabase Database
+        const { data, error } = await supabaseClient
+          .from('inquiries')
+          .insert([
+            { 
+              name: name, 
+              phone: phone, 
+              email: email, 
+              practice_area: area, 
+              description: desc 
+            }
+          ]);
+
+        if (error) throw error;
+
+        // 2. Send Email Notification via FormSubmit.co
+        const emailResponse = await fetch('https://formsubmit.co/ajax/ramikhoury.adv@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            "Name / الاسم / שם": name,
+            "Phone / الهاتف / טלפון": phone,
+            "Email / البريد الإلكتروني / דוא\"ל": email,
+            "Practice Area / مجال الاستشارة / תחום הפנייה": area,
+            "Description / تفاصيل الطلب / תיאور הנושא": desc,
+            "_subject": `New Website Inquiry from ${name}`
+          })
+        });
+
+        if (!emailResponse.ok) {
+          throw new Error('Failed to send email notification.');
+        }
+
+        // Success State
+        document.getElementById('form-inner').style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+      } catch (err) {
+        console.error("Submission Error:", err);
+        alert(msg.error);
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitBtnText) submitBtnText.innerHTML = originalText;
+      }
+    }
+    /* REVIEW SYSTEM LOGIC */
+    let selectedRating = 5;
+    let loadedReviews = [];
+
+    function openReviewModal() {
+      const modal = document.getElementById('review-modal');
+      if (modal) {
+        modal.classList.add('open');
+        // Reset form states
+        const formInner = document.getElementById('review-form-inner');
+        if (formInner) formInner.style.display = 'block';
+        const successBlock = document.getElementById('review-success');
+        if (successBlock) successBlock.style.display = 'none';
+        
+        const rName = document.getElementById('review-name');
+        if (rName) rName.value = '';
+        const rComment = document.getElementById('review-comment');
+        if (rComment) rComment.value = '';
+        const rArea = document.getElementById('review-practice-area');
+        if (rArea) rArea.selectedIndex = 0;
+        
+        selectedRating = 5;
+        highlightStars(5);
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeReviewModal() {
+      const modal = document.getElementById('review-modal');
+      if (modal) {
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('review-modal');
+      if (e.target === modal) {
+        closeReviewModal();
+      }
+    });
+
+    function initStarSelector() {
+      const stars = document.querySelectorAll('.star-select-item');
+      stars.forEach(star => {
+        star.addEventListener('mouseover', () => {
+          const val = parseInt(star.getAttribute('data-value'));
+          highlightStars(val);
+        });
+        star.addEventListener('mouseout', () => {
+          highlightStars(selectedRating);
+        });
+        star.addEventListener('click', () => {
+          selectedRating = parseInt(star.getAttribute('data-value'));
+          highlightStars(selectedRating);
+        });
+      });
+      highlightStars(selectedRating);
+    }
+
+    function highlightStars(val) {
+      const stars = document.querySelectorAll('.star-select-item');
+      stars.forEach(star => {
+        const starVal = parseInt(star.getAttribute('data-value'));
+        if (starVal <= val) {
+          star.classList.add('selected');
+        } else {
+          star.classList.remove('selected');
+        }
+      });
+    }
+
+    async function submitReview() {
+      if (!supabaseClient && window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+      
+      const name = document.getElementById('review-name').value.trim();
+      const comment = document.getElementById('review-comment').value.trim();
+      const selectEl = document.getElementById('review-practice-area');
+      const practiceAreaIndex = selectEl ? selectEl.selectedIndex : 0;
+      
+      const currentLang = localStorage.getItem('preferredLang') || 'he';
+      
+      const valMessages = {
+        he: {
+          name: "אנא הזן שם מלא.",
+          comment: "אנא הזן את תוכן חוות הדעת.",
+          sending: "שולח...",
+          error: "ארעה שגיאה בשליחת חוות הדעת. אנא נסו שנית."
+        },
+        ar: {
+          name: "يرجى إدخال الاسم الكامل.",
+          comment: "يرجى إدخال تفاصيل المراجعة.",
+          sending: "جاري الإرسال...",
+          error: "حدث خطأ أثناء إرسال المراجعة. يرجى المحاولة مرة أخرى."
+        },
+        en: {
+          name: "Please enter your full name.",
+          comment: "Please enter your review comment.",
+          sending: "Sending...",
+          error: "An error occurred while sending your review. Please try again."
+        }
+      };
+      
+      const msg = valMessages[currentLang];
+      
+      if (!name) {
+        alert(msg.name);
+        return;
+      }
+      if (!comment) {
+        alert(msg.comment);
+        return;
+      }
+      
+      const submitBtn = document.getElementById('btn-submit-review');
+      const submitBtnText = document.getElementById('review-submit-text');
+      const originalText = submitBtnText ? submitBtnText.innerHTML : '';
+      
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitBtnText) submitBtnText.innerHTML = msg.sending;
+      
+      try {
+        if (!supabaseClient) {
+          throw new Error('Supabase client is not initialized.');
+        }
+        
+        const { data, error } = await supabaseClient
+          .from('reviews')
+          .insert([
+            {
+              name: name,
+              rating: selectedRating,
+              comment: comment,
+              practice_area_index: practiceAreaIndex,
+              approved: false
+            }
+          ]);
+          
+        if (error) throw error;
+        
+        const formInner = document.getElementById('review-form-inner');
+        if (formInner) formInner.style.display = 'none';
+        const successBlock = document.getElementById('review-success');
+        if (successBlock) successBlock.style.display = 'block';
+      } catch (err) {
+        console.error("Submission Error:", err);
+        alert(msg.error);
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitBtnText) submitBtnText.innerHTML = originalText;
+      }
+    }
+
+    function getReviewSubtitle(review, lang) {
+      const idx = review.practice_area_index;
+      if (idx && idx >= 1 && idx <= 8) {
+        return selectOptions[lang][idx];
+      }
+      const defaultSub = {
+        he: "לקוח המשרד",
+        ar: "عميل المكتب",
+        en: "Firm Client"
+      };
+      return defaultSub[lang];
+    }
+
+    function renderReviews(lang) {
+      const carousel = document.getElementById('t-carousel');
+      if (!carousel || !loadedReviews || loadedReviews.length === 0) return;
+      
+      carousel.innerHTML = '';
+      
+      loadedReviews.forEach(review => {
+        const card = document.createElement('div');
+        card.className = 'testimonial-card';
+        
+        const starsDiv = document.createElement('div');
+        starsDiv.className = 't-stars';
+        starsDiv.textContent = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+        card.appendChild(starsDiv);
+        
+        const quotePara = document.createElement('p');
+        quotePara.className = 't-quote';
+        quotePara.textContent = `"${review.comment}"`;
+        card.appendChild(quotePara);
+        
+        const authorDiv = document.createElement('div');
+        authorDiv.className = 't-author';
+        
+        const authorStrong = document.createElement('strong');
+        authorStrong.textContent = review.name;
+        authorDiv.appendChild(authorStrong);
+        
+        const subtitleSpan = document.createElement('span');
+        subtitleSpan.textContent = getReviewSubtitle(review, lang);
+        authorDiv.appendChild(subtitleSpan);
+        
+        card.appendChild(authorDiv);
+        carousel.appendChild(card);
+      });
+    }
+
+    async function loadReviews() {
+      if (!supabaseClient && window.supabase) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      }
+      if (!supabaseClient) return;
+      
+      try {
+        const { data, error } = await supabaseClient
+          .from('reviews')
+          .select('*')
+          .eq('approved', true)
+          .order('created_at', { ascending: false });
+          
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+          loadedReviews = data;
+          const currentLang = localStorage.getItem('preferredLang') || 'he';
+          renderReviews(currentLang);
+        }
+      } catch (err) {
+        console.error("Error loading reviews:", err);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLang = localStorage.getItem('preferredLang') || 'he';
+      setLang(savedLang);
+      initStarSelector();
+      loadReviews();
+    });
+  </script>
+</body>
+</html>
