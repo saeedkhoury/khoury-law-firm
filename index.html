@@ -1517,6 +1517,13 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+    .hp-field {
+      position: absolute;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
     .form-submit svg {
       width: 16px;
       height: 16px;
@@ -2134,14 +2141,7 @@
         <div class="hero-eyebrow-dot"></div>
         <span id="hero-tag">משרד עורכי דין | כפר כנא</span>
       </div>
-      <h1 id="hero-h1">
-        <span class="hero-word">אתם</span>
-        <span class="hero-word">מדברים.</span><br>
-        <span class="hero-word">אנחנו</span>
-        <span class="hero-word">שומעים.</span><br>
-        <span class="hero-word"><em>הם</em></span>
-        <span class="hero-word"><em>משלמים.</em></span>
-      </h1>
+
       <p class="hero-sub" id="hero-sub">משרד חורי ושות׳ — שני עורכי דין מנוסים, מומחיות רחבה, ליווי אישי ובלתי מתפשר. מכפר כנא, עם ייצוג בכל רחבי ישראל.</p>
       
       <div class="hero-ctas">
@@ -2661,6 +2661,10 @@
               <label class="form-label" id="ldesc">תיאור הנושא</label>
             </div>
 
+            <div class="hp-field" aria-hidden="true">
+              <input type="text" id="hp-website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
             <button class="form-submit" onclick="submitForm()">
               <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               <span id="sbtn">שלחו פנייה</span>
@@ -2928,18 +2932,17 @@
 
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    /* HERO WORD-BY-WORD STAGGER ENTRANCE */
-    document.addEventListener('DOMContentLoaded', () => {
+    /* HERO WORD-BY-WORD STAGGER ENTRANCE — runs after setLang rebuilds h1 */
+    function animateHeroWords() {
+      const words = document.querySelectorAll('.hero-word');
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.querySelectorAll('.hero-word').forEach((word, idx) => {
-          setTimeout(() => {
-            word.classList.add('visible');
-          }, idx * 120 + 200);
+        words.forEach((word, idx) => {
+          setTimeout(() => word.classList.add('visible'), idx * 120 + 200);
         });
       } else {
-        document.querySelectorAll('.hero-word').forEach(word => word.classList.add('visible'));
+        words.forEach(word => word.classList.add('visible'));
       }
-    });
+    }
 
     /* TEXT SCRAMBLE CLASS */
     class TextScramble {
@@ -3749,6 +3752,8 @@
           }
         }
       }
+      // Re-mark hero words visible after lang switch (no stagger — they're already shown)
+      document.querySelectorAll('.hero-word').forEach(w => w.classList.add('visible'));
 
       const pl = placeholders[lang];
       const nameInput = document.getElementById('input-name');
@@ -3837,6 +3842,8 @@
 
       const msg = valMessages[currentLang];
 
+      if (document.getElementById('hp-website').value) return;
+
       if (!name) {
         alert(msg.name);
         return;
@@ -3862,43 +3869,20 @@
           throw new Error('Supabase client is not initialized.');
         }
 
-        // 1. Insert inquiry into Supabase Database
+        // Insert inquiry into Supabase — data stays within Supabase only
         const { data, error } = await supabaseClient
           .from('inquiries')
           .insert([
-            { 
-              name: name, 
-              phone: phone, 
-              email: email, 
-              practice_area: area, 
-              description: desc 
+            {
+              name: name,
+              phone: phone,
+              email: email,
+              practice_area: area,
+              description: desc
             }
           ]);
 
         if (error) throw error;
-
-        // 2. Send Email Notification via FormSubmit.co
-        const emailResponse = await fetch('https://formsubmit.co/ajax/ramikhoury.adv@gmail.com', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            "Name / الاسم / שם": name,
-            "Phone / الهاتف / טלפון": phone,
-            "Email / البريد الإلكتروني / דוא\"ל": email,
-            "Practice Area / مجال الاستشارة / תחום הפנייה": area,
-            "Description / تفاصيل الطلب / תיאور הנושא": desc,
-            "_subject": `New Website Inquiry from ${name}`
-          })
-        });
-
-        if (!emailResponse.ok) {
-          throw new Error('Failed to send email notification.');
-        }
-
-        // Success State
         document.getElementById('form-inner').style.display = 'none';
         document.getElementById('form-success').style.display = 'block';
       } catch (err) {
@@ -4140,6 +4124,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       const savedLang = localStorage.getItem('preferredLang') || 'he';
       setLang(savedLang);
+      animateHeroWords();
       initStarSelector();
       loadReviews();
 
