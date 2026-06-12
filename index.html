@@ -1933,7 +1933,7 @@
       border-color: rgba(255, 255, 255, 0.3);
       color: rgba(255, 255, 255, 0.7);
     }
-    body.a11y-large-text { font-size: 110%; }
+    body.a11y-large-text { /* font-size handled via JS on html root */ }
     body.a11y-high-contrast .header-stack,
     body.a11y-high-contrast section,
     body.a11y-high-contrast footer { filter: contrast(1.6) brightness(1.1); }
@@ -3353,10 +3353,16 @@
       trigger.setAttribute('aria-expanded', isOpen);
     }
 
+    function applyRootFontSize() {
+      const base = [80, 90, 100, 110, 120, 130][a11yFontLevel + 2];
+      const boost = document.body.classList.contains('a11y-large-text') ? 20 : 0;
+      const total = Math.min(150, base + boost);
+      document.documentElement.style.fontSize = total === 100 ? '' : total + '%';
+    }
+
     function a11yFontSize(dir) {
       a11yFontLevel = Math.max(-2, Math.min(3, a11yFontLevel + dir));
-      const sizes = [80, 90, 100, 110, 120, 130];
-      document.documentElement.style.fontSize = sizes[a11yFontLevel + 2] + '%';
+      applyRootFontSize();
     }
 
     function a11yToggle(mode) {
@@ -3364,6 +3370,7 @@
       const active = document.body.classList.toggle('a11y-' + mode);
       btn.classList.toggle('active', active);
       btn.setAttribute('aria-pressed', active);
+      if (mode === 'large-text') applyRootFontSize();
     }
 
     function a11yReset() {
