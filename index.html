@@ -1934,7 +1934,9 @@
       color: rgba(255, 255, 255, 0.7);
     }
     body.a11y-large-text { font-size: 110%; }
-    body.a11y-high-contrast { filter: contrast(1.6) brightness(1.1); }
+    body.a11y-high-contrast .header-stack,
+    body.a11y-high-contrast section,
+    body.a11y-high-contrast footer { filter: contrast(1.6) brightness(1.1); }
     body.a11y-underline-links a { text-decoration: underline !important; }
 
     /* MEDIA BREAKPOINTS */
@@ -3037,27 +3039,27 @@
   <!-- ACCESSIBILITY WIDGET -->
   <div class="a11y-float" id="a11y-float">
     <div class="a11y-panel" id="a11y-panel" role="dialog" aria-label="תפריט נגישות">
-      <div class="a11y-panel-title">נגישות / Accessibility</div>
+      <div class="a11y-panel-title" id="a11y-title">נגישות</div>
       <div class="a11y-row">
-        <span class="a11y-row-label">גודל טקסט / Text</span>
+        <span class="a11y-row-label" id="a11y-font-label">גודל טקסט</span>
         <div class="a11y-row-controls">
           <button class="a11y-icon-btn" onclick="a11yFontSize(-1)" aria-label="Decrease font size">A−</button>
           <button class="a11y-icon-btn" onclick="a11yFontSize(1)" aria-label="Increase font size">A+</button>
         </div>
       </div>
       <button class="a11y-toggle-btn" id="btn-high-contrast" onclick="a11yToggle('high-contrast')" aria-pressed="false">
-        <span>ניגודיות גבוהה</span>
+        <span id="a11y-contrast-label">ניגודיות גבוהה</span>
         <div class="a11y-switch"></div>
       </button>
       <button class="a11y-toggle-btn" id="btn-large-text" onclick="a11yToggle('large-text')" aria-pressed="false">
-        <span>טקסט גדול</span>
+        <span id="a11y-large-label">טקסט גדול</span>
         <div class="a11y-switch"></div>
       </button>
       <button class="a11y-toggle-btn" id="btn-underline-links" onclick="a11yToggle('underline-links')" aria-pressed="false">
-        <span>הדגש קישורים</span>
+        <span id="a11y-underline-label">הדגש קישורים</span>
         <div class="a11y-switch"></div>
       </button>
-      <button class="a11y-reset" onclick="a11yReset()">איפוס / Reset</button>
+      <button class="a11y-reset" id="a11y-reset-btn" onclick="a11yReset()">איפוס</button>
     </div>
     <button class="a11y-trigger" id="a11y-trigger" onclick="toggleA11yPanel()" aria-label="פתח תפריט נגישות / Accessibility" aria-expanded="false" aria-controls="a11y-panel">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -3658,7 +3660,13 @@
         "priv": "מדיניות פרטיות",
         "terms": "תנאי שימוש",
         "wa-txt": "WhatsApp עכשיו",
-        "wa-tip": "סיוע דחוף — זמין"
+        "wa-tip": "סיוע דחוף — זמין",
+        "a11y-title": "נגישות",
+        "a11y-font-label": "גודל טקסט",
+        "a11y-contrast-label": "ניגודיות גבוהה",
+        "a11y-large-label": "טקסט גדול",
+        "a11y-underline-label": "הדגש קישורים",
+        "a11y-reset-btn": "איפוס"
       },
       ar: {
         "firm-name": "خوري وشركاؤه — محامون",
@@ -3795,7 +3803,13 @@
         "priv": "سياسة الخصوصية",
         "terms": "شروط الاستخدام",
         "wa-txt": "واتساب الآن",
-        "wa-tip": "مساعدة عاجلة — متاح"
+        "wa-tip": "مساعدة عاجلة — متاح",
+        "a11y-title": "إمكانية الوصول",
+        "a11y-font-label": "حجم الخط",
+        "a11y-contrast-label": "تباين عالٍ",
+        "a11y-large-label": "نص كبير",
+        "a11y-underline-label": "تسطير الروابط",
+        "a11y-reset-btn": "إعادة تعيين"
       },
       en: {
         "firm-name": "Khoury & Co. — Law Firm",
@@ -3932,7 +3946,13 @@
         "priv": "Privacy Policy",
         "terms": "Terms of Use",
         "wa-txt": "WhatsApp Now",
-        "wa-tip": "Urgent Assistance — Available"
+        "wa-tip": "Urgent Assistance — Available",
+        "a11y-title": "Accessibility",
+        "a11y-font-label": "Text Size",
+        "a11y-contrast-label": "High Contrast",
+        "a11y-large-label": "Large Text",
+        "a11y-underline-label": "Underline Links",
+        "a11y-reset-btn": "Reset"
       }
     };
 
