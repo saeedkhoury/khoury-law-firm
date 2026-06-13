@@ -1393,6 +1393,7 @@
       outline: none;
       transition: border-color 0.3s;
     }
+    .form-input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
     .form-input:focus {
       border-color: var(--gold);
     }
@@ -1937,7 +1938,18 @@
     body.a11y-high-contrast .header-stack,
     body.a11y-high-contrast section,
     body.a11y-high-contrast footer { filter: contrast(1.6) brightness(1.1); }
+    body.a11y-grayscale .header-stack,
+    body.a11y-grayscale section,
+    body.a11y-grayscale footer { filter: grayscale(1); }
     body.a11y-underline-links a { text-decoration: underline !important; }
+    body.a11y-no-motion *,
+    body.a11y-no-motion *::before,
+    body.a11y-no-motion *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+    body.a11y-no-motion #hero-canvas,
+    body.a11y-no-motion #manifesto-canvas { display: none !important; }
 
     /* MEDIA BREAKPOINTS */
     @media (max-width: 1024px) {
@@ -2329,9 +2341,12 @@
     </div>
   </div>
 
+  <!-- Main Content -->
+  <main id="main-content" role="main">
+
   <!-- Hero Section -->
   <section class="hero" id="home">
-    <canvas id="hero-canvas"></canvas>
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
     <div class="hero-grid">
       <div class="hero-eyebrow">
         <div class="hero-eyebrow-dot"></div>
@@ -2428,7 +2443,7 @@
 
   <!-- Manifesto Section -->
   <section class="manifesto">
-    <canvas id="manifesto-canvas"></canvas>
+    <canvas id="manifesto-canvas" aria-hidden="true"></canvas>
     <div class="container">
       <div class="manifesto-stack">
         <div class="section-eyebrow" style="margin: 0 auto 1.5rem;"><span id="manifesto-eyebrow">ההבטחה שלנו</span></div>
@@ -2933,6 +2948,8 @@
     </div>
   </section>
 
+  </main><!-- /main-content -->
+
   <!-- Footer -->
   <footer role="contentinfo">
     <div class="container">
@@ -3059,7 +3076,16 @@
         <span id="a11y-underline-label">הדגש קישורים</span>
         <div class="a11y-switch"></div>
       </button>
+      <button class="a11y-toggle-btn" id="btn-grayscale" onclick="a11yToggle('grayscale')" aria-pressed="false">
+        <span id="a11y-grayscale-label">גווני אפור</span>
+        <div class="a11y-switch"></div>
+      </button>
+      <button class="a11y-toggle-btn" id="btn-no-motion" onclick="a11yToggle('no-motion')" aria-pressed="false">
+        <span id="a11y-motion-label">השהה אנימציות</span>
+        <div class="a11y-switch"></div>
+      </button>
       <button class="a11y-reset" id="a11y-reset-btn" onclick="a11yReset()">איפוס</button>
+      <button class="a11y-reset" id="a11y-statement-btn" onclick="openA11yStatement()" style="margin-top:6px; color: var(--gold2); border-color: var(--gold-border);">הצהרת נגישות ←</button>
     </div>
     <button class="a11y-trigger" id="a11y-trigger" onclick="toggleA11yPanel()" aria-label="פתח תפריט נגישות / Accessibility" aria-expanded="false" aria-controls="a11y-panel">
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -3067,6 +3093,40 @@
         <path d="M19 13v-2c-1.54.02-3.09-.75-4.07-1.83l-1.29-1.43c-.17-.19-.38-.34-.61-.45-.01-.01-.01-.01-.02-.01H13c-.35-.2-.75-.3-1.19-.26C10.76 7.11 10 8.04 10 9.09V15c0 1.1.9 2 2 2h5v5h2v-5.5c0-1.1-.9-2-2-2h-3v-3.45c1.29 1.07 3.25 1.94 5 1.95zm-9 7c-1.1 0-2-.9-2-2v-3H6v3c0 2.21 1.79 4 4 4 .37 0 .72-.06 1.06-.14l-1.34-1.34c-.24.06-.47.1-.72.1z"/>
       </svg>
     </button>
+  </div>
+
+  <!-- ACCESSIBILITY STATEMENT MODAL -->
+  <div id="a11y-statement-modal" role="dialog" aria-modal="true" aria-labelledby="a11y-stmt-title" style="display:none;position:fixed;inset:0;background:rgba(5,5,8,0.92);z-index:10010;overflow-y:auto;padding:2rem 1rem;backdrop-filter:blur(8px);">
+    <div style="max-width:680px;margin:0 auto;background:rgba(8,8,16,0.98);border:1px solid var(--gold-border);border-radius:var(--radius-lg);padding:2.5rem;position:relative;color:var(--white);">
+      <button onclick="closeA11yStatement()" aria-label="סגור / Close" style="position:absolute;top:1.2rem;inset-inline-end:1.2rem;background:transparent;border:none;color:var(--slate);font-size:20px;cursor:pointer;line-height:1;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--slate)'">✕</button>
+      <h2 id="a11y-stmt-title" style="font-family:var(--font-display);color:var(--gold);font-size:1.6rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--gold-border);">הצהרת נגישות</h2>
+      <div style="font-family:var(--font-body);line-height:1.8;font-size:0.95rem;">
+        <p style="margin-bottom:1rem;">משרד עורכי דין חורי ושות׳ מחויב לנגישות דיגיטלית ולאפשר לכלל המשתמשים, לרבות אנשים עם מוגבלויות, לגלוש באתר זה בצורה מיטבית.</p>
+        <h3 style="color:var(--gold2);font-size:1rem;margin:1.2rem 0 0.5rem;">סטנדרט הנגישות</h3>
+        <p style="margin-bottom:1rem;">האתר פועל לעמידה בדרישות תקן הנגישות הישראלי <strong>5568</strong> ברמת <strong>AA</strong>, המבוסס על הנחיות WCAG 2.1 הבינלאומיות.</p>
+        <h3 style="color:var(--gold2);font-size:1rem;margin:1.2rem 0 0.5rem;">הסדרי הנגישות באתר</h3>
+        <ul style="padding-inline-start:1.2rem;margin-bottom:1rem;display:flex;flex-direction:column;gap:0.4rem;">
+          <li>תמיכה מלאה בשלוש שפות: עברית, ערבית ואנגלית, כולל כיוון RTL</li>
+          <li>כפתור נגישות קבוע המאפשר שינוי גודל טקסט, ניגודיות גבוהה, גווני אפור, הגדלת טקסט, הדגשת קישורים והשהיית אנימציות</li>
+          <li>קישור "דילוג לתוכן" בראש הדף לניווט מהיר</li>
+          <li>תיוג ARIA מלא לקורא מסך (role, aria-label, aria-expanded)</li>
+          <li>היררכיית כותרות תקנית (H2, H3, H4)</li>
+          <li>טקסט חלופי לתמונות</li>
+          <li>ניתן לנווט באמצעות המקלדת בלבד</li>
+          <li>מחוון פוקוס ברור על כל האלמנטים האינטראקטיביים</li>
+        </ul>
+        <h3 style="color:var(--gold2);font-size:1rem;margin:1.2rem 0 0.5rem;">מגבלות ידועות</h3>
+        <p style="margin-bottom:1rem;">אנו עובדים באופן שוטף לשיפור הנגישות. ייתכנו מגבלות בכמה אלמנטים ויזואליים מורכבים. נשמח לקבל פניות בנושא.</p>
+        <h3 style="color:var(--gold2);font-size:1rem;margin:1.2rem 0 0.5rem;">רכז הנגישות — צור קשר</h3>
+        <p style="margin-bottom:0.4rem;">לפניות בנושאי נגישות האתר:</p>
+        <ul style="padding-inline-start:1.2rem;margin-bottom:1.5rem;display:flex;flex-direction:column;gap:0.3rem;">
+          <li><strong>שם:</strong> עו"ד וליד חורי</li>
+          <li><strong>טלפון / WhatsApp:</strong> <a href="tel:+972524891619" style="color:var(--gold);">052-489-1619</a></li>
+          <li><strong>דוא"ל:</strong> <a href="mailto:saed.khoury10@gmail.com" style="color:var(--gold);">saed.khoury10@gmail.com</a></li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--slate);border-top:1px solid var(--gold-border);padding-top:1rem;">תאריך עדכון אחרון: יוני 2026</p>
+      </div>
+    </div>
   </div>
 
   <div class="wa-float" id="wa-float">
@@ -3375,13 +3435,27 @@
 
     function a11yReset() {
       document.documentElement.style.fontSize = '';
-      ['high-contrast', 'large-text', 'underline-links'].forEach(mode => {
+      ['high-contrast', 'large-text', 'underline-links', 'grayscale', 'no-motion'].forEach(mode => {
         document.body.classList.remove('a11y-' + mode);
         const btn = document.getElementById('btn-' + mode);
         if (btn) { btn.classList.remove('active'); btn.setAttribute('aria-pressed', 'false'); }
       });
       a11yFontLevel = 0;
     }
+
+    function openA11yStatement() {
+      const modal = document.getElementById('a11y-statement-modal');
+      if (modal) { modal.style.display = 'block'; document.body.style.overflow = 'hidden'; }
+    }
+
+    function closeA11yStatement() {
+      const modal = document.getElementById('a11y-statement-modal');
+      if (modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+    }
+
+    document.getElementById('a11y-statement-modal')?.addEventListener('click', function(e) {
+      if (e.target === this) closeA11yStatement();
+    });
 
     document.addEventListener('click', function(e) {
       const float = document.getElementById('a11y-float');
@@ -3673,7 +3747,10 @@
         "a11y-contrast-label": "ניגודיות גבוהה",
         "a11y-large-label": "טקסט גדול",
         "a11y-underline-label": "הדגש קישורים",
-        "a11y-reset-btn": "איפוס"
+        "a11y-grayscale-label": "גווני אפור",
+        "a11y-motion-label": "השהה אנימציות",
+        "a11y-reset-btn": "איפוס",
+        "a11y-statement-btn": "הצהרת נגישות ←"
       },
       ar: {
         "firm-name": "خوري وشركاؤه — محامون",
@@ -3816,7 +3893,10 @@
         "a11y-contrast-label": "تباين عالٍ",
         "a11y-large-label": "نص كبير",
         "a11y-underline-label": "تسطير الروابط",
-        "a11y-reset-btn": "إعادة تعيين"
+        "a11y-grayscale-label": "تدرج الرمادي",
+        "a11y-motion-label": "إيقاف الحركة",
+        "a11y-reset-btn": "إعادة تعيين",
+        "a11y-statement-btn": "بيان إمكانية الوصول ←"
       },
       en: {
         "firm-name": "Khoury & Co. — Law Firm",
@@ -3959,7 +4039,10 @@
         "a11y-contrast-label": "High Contrast",
         "a11y-large-label": "Large Text",
         "a11y-underline-label": "Underline Links",
-        "a11y-reset-btn": "Reset"
+        "a11y-grayscale-label": "Grayscale",
+        "a11y-motion-label": "Pause Animations",
+        "a11y-reset-btn": "Reset",
+        "a11y-statement-btn": "Accessibility Statement →"
       }
     };
 
