@@ -1406,6 +1406,15 @@
       transition: border-color 0.3s;
     }
     .form-input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .form-input:-webkit-autofill,
+    .form-input:-webkit-autofill:hover,
+    .form-input:-webkit-autofill:focus,
+    .form-input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 1000px var(--bg) inset !important;
+      -webkit-text-fill-color: var(--ink) !important;
+      transition: background-color 9999s ease-in-out 0s;
+      caret-color: var(--ink);
+    }
     .form-input:focus {
       border-color: var(--gold);
     }
@@ -4190,6 +4199,20 @@
     let supabaseClient = null;
 
     /* AJAX FORM SUBMISSION SCRIPT */
+    function setCookie(name, value, minutes) {
+      const d = new Date();
+      d.setTime(d.getTime() + minutes * 60 * 1000);
+      document.cookie = name + '=' + value + ';expires=' + d.toUTCString() + ';path=/;SameSite=Strict';
+    }
+    function getCookie(name) {
+      const prefix = name + '=';
+      for (const part of document.cookie.split(';')) {
+        const c = part.trim();
+        if (c.startsWith(prefix)) return c.substring(prefix.length);
+      }
+      return null;
+    }
+
     async function submitForm() {
       if (!supabaseClient && window.supabase) {
         supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -4206,24 +4229,27 @@
       const valMessages = {
         he: {
           name: "אנא הזן שם מלא.",
-          contact: "אנא הזן טלפון או דואר אלקטרוני ליצירת קשר.",
+          phone: "אנא הזן מספר טלפון ליצירת קשר.",
           desc: "אנא הזן את תיאור הפנייה.",
           sending: "שולח...",
-          error: "ארעה שגיאה בשליחת הפנייה. אנא נסו שנית או פנו ישירות בטלפון או וואטסאפ."
+          error: "ארעה שגיאה בשליחת הפנייה. אנא נסו שנית או פנו ישירות בטלפון או וואטסאפ.",
+          rateLimit: m => `הפנייה נשלחה. ניתן לשלוח פנייה נוספת בעוד ${m} דקות.`
         },
         ar: {
           name: "يرجى إدخال الاسم الكامل.",
-          contact: "يرجى إدخال رقم الهاتف أو البريد الإلكتروني للتواصل.",
+          phone: "يرجى إدخال رقم الهاتف للتواصل.",
           desc: "يرجى إدخال تفاصيل الطلب.",
           sending: "جاري الإرسال...",
-          error: "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى أو الاتصال بنا مباشرة عبر الهاتف أو الواتساب."
+          error: "حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى أو الاتصال بنا مباشرة عبر الهاتف أو الواتساب.",
+          rateLimit: m => `تم إرسال الطلب. يمكنك إرسال طلب آخر بعد ${m} دقيقة.`
         },
         en: {
           name: "Please enter your full name.",
-          contact: "Please enter either a phone number or email address.",
+          phone: "Please enter a phone number.",
           desc: "Please enter the description of your case.",
           sending: "Sending...",
-          error: "An error occurred while sending the request. Please try again or contact us directly via phone or WhatsApp."
+          error: "An error occurred while sending the request. Please try again or contact us directly via phone or WhatsApp.",
+          rateLimit: m => `Request already sent. You may submit another in ${m} minute${m !== 1 ? 's' : ''}.`
         }
       };
 
@@ -4231,12 +4257,19 @@
 
       if (document.getElementById('hp-website').value) return;
 
+      const lastSubmit = getCookie('klf_last_submit');
+      if (lastSubmit) {
+        const remaining = Math.ceil((10 * 60 * 1000 - (Date.now() - parseInt(lastSubmit))) / 60000);
+        alert(msg.rateLimit(Math.max(1, remaining)));
+        return;
+      }
+
       if (!name) {
         alert(msg.name);
         return;
       }
-      if (!phone && !email) {
-        alert(msg.contact);
+      if (!phone) {
+        alert(msg.phone);
         return;
       }
       if (!desc) {
@@ -4270,6 +4303,7 @@
           ]);
 
         if (error) throw error;
+        setCookie('klf_last_submit', Date.now().toString(), 10);
         document.getElementById('form-inner').style.display = 'none';
         document.getElementById('form-success').style.display = 'block';
       } catch (err) {
