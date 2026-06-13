@@ -1941,7 +1941,15 @@
     body.a11y-grayscale .header-stack,
     body.a11y-grayscale section,
     body.a11y-grayscale footer { filter: grayscale(1); }
-    body.a11y-underline-links a:not(.btn-solid):not(.btn-wa):not(.wa-btn):not(.logo) { text-decoration: underline !important; }
+    body.a11y-underline-links h1, body.a11y-underline-links h2,
+    body.a11y-underline-links h3, body.a11y-underline-links h4,
+    body.a11y-underline-links h5, body.a11y-underline-links h6,
+    body.a11y-underline-links p, body.a11y-underline-links a,
+    body.a11y-underline-links span:not(.a11y-switch),
+    body.a11y-underline-links li, body.a11y-underline-links label,
+    body.a11y-underline-links button, body.a11y-underline-links strong,
+    body.a11y-underline-links em, body.a11y-underline-links small,
+    body.a11y-underline-links td, body.a11y-underline-links th { text-decoration: underline !important; }
     body.a11y-no-motion *,
     body.a11y-no-motion *::before,
     body.a11y-no-motion *::after {
