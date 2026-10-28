@@ -6,8 +6,6 @@
   <title id="meta-title">Khoury Law Office | משרד עורכי דין חורי</title>
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,700&family=Noto+Serif+Hebrew:wght@300;400;600;700&family=Heebo:wght@300;400;500;600&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <!-- Supabase Client CDN Library -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     /* DESIGN SYSTEM & VARIABLES */
     :root {
@@ -2847,15 +2845,7 @@
         </div>
       </div>
 
-      <!-- Review CTA Button -->
-      <div class="review-action-wrap">
-        <button class="btn-review" onclick="openReviewModal()">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-          </svg>
-          <span id="btn-write-review">כתיבת חוות דעת</span>
-        </button>
-      </div>
+      <!-- (Reviews are not collected on the site any more: the testimonials above are shown as written.) -->
     </div>
   </section>
 
@@ -2916,8 +2906,8 @@
             <div class="form-success-icon">
               <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <p style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);font-weight:700;margin-bottom:.5rem" id="succ-h">הפנייה נשלחה!</p>
-            <p style="color:var(--slate);font-size:.95rem" id="succ-s">נחזור אליכם בהקדם האפשרי.</p>
+            <p style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);font-weight:700;margin-bottom:.5rem" id="succ-h">ההודעה מוכנה בוואטסאפ</p>
+            <p style="color:var(--slate);font-size:.95rem" id="succ-s">לחצו על "שליחה" בוואטסאפ כדי שהפנייה תגיע למשרד. נחזור אליכם בהקדם האפשרי.</p>
           </div>
         </div>
 
@@ -3755,8 +3745,8 @@
         "ltype": "תחום הפנייה",
         "ldesc": "תיאור הנושא",
         "sbtn": "שלחו פנייה",
-        "succ-h": "הפנייה נשלחה!",
-        "succ-s": "נחזור אליכם בהקדם האפשרי.",
+        "succ-h": "ההודעה מוכנה בוואטסאפ",
+        "succ-s": "לחצו על \"שליחה\" בוואטסאפ כדי שהפנייה תגיע למשרד. נחזור אליכם בהקדם האפשרי.",
         "cl1": "עו\"ד רמי חורי",
         "cl2": "עו\"ד וליד חורי",
         "cl3": "מייל",
@@ -3901,8 +3891,8 @@
         "ltype": "مجال الاستشارة",
         "ldesc": "تفاصيل الطلب",
         "sbtn": "إرسال الطلب",
-        "succ-h": "تم إرسال طلبكم بنجاح!",
-        "succ-s": "سنتواصل معكم في أقرب وقت ممكن.",
+        "succ-h": "رسالتكم جاهزة في واتساب",
+        "succ-s": "اضغطوا على «إرسال» في واتساب ليصل طلبكم إلى المكتب. سنتواصل معكم في أقرب وقت ممكن.",
         "cl1": "المحامي رامي خوري",
         "cl2": "المحامي وليد خوري",
         "cl3": "البريد الإلكتروني",
@@ -4047,8 +4037,8 @@
         "ltype": "Practice Area",
         "ldesc": "Description",
         "sbtn": "Send Request",
-        "succ-h": "Request Sent!",
-        "succ-s": "We will get back to you as soon as possible.",
+        "succ-h": "Your message is ready in WhatsApp",
+        "succ-s": "Press Send in WhatsApp so it reaches the office. We will get back to you as soon as possible.",
         "cl1": "Adv. Rami Khoury",
         "cl2": "Adv. Walid Khoury",
         "cl3": "Email",
@@ -4219,9 +4209,9 @@
       }
     }
 
-    // Initialize Supabase Client Configuration
-    const SUPABASE_URL = "https://sxhiuqkrzxurybfxkuvd.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_e3mYA8gzUkHPheNcRJTsmQ_7EnN9Gk4";
+    // The contact form now prepares a WhatsApp message to the office (the database it used to
+    // write to no longer exists). The visitor sends it from WhatsApp; the site stores nothing.
+    const OFFICE_WHATSAPP = "972524891619";
     let supabaseClient = null;
 
     /* AJAX FORM SUBMISSION SCRIPT */
@@ -4240,9 +4230,6 @@
     }
 
     async function submitForm() {
-      if (!supabaseClient && window.supabase) {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      }
       const name = document.getElementById('input-name').value.trim();
       const phone = document.getElementById('input-phone').value.trim();
       const email = document.getElementById('input-email').value.trim();
@@ -4311,24 +4298,24 @@
       if (submitBtnText) submitBtnText.innerHTML = msg.sending;
 
       try {
-        if (!supabaseClient) {
-          throw new Error('Supabase client is not initialized.');
-        }
-
-        // Insert inquiry into Supabase — data stays within Supabase only
-        const { data, error } = await supabaseClient
-          .from('inquiries')
-          .insert([
-            {
-              name: name,
-              phone: phone,
-              email: email,
-              practice_area: area,
-              description: desc
-            }
-          ]);
-
-        if (error) throw error;
+        // A WhatsApp draft to the office with the visitor's details; they press Send in WhatsApp.
+        const labels = {
+          he: { title: 'פנייה חדשה מהאתר', name: 'שם', phone: 'טלפון', email: 'אימייל', area: 'תחום', desc: 'פרטים' },
+          ar: { title: 'طلب جديد من الموقع', name: 'الاسم', phone: 'الهاتف', email: 'البريد الإلكتروني', area: 'المجال', desc: 'التفاصيل' },
+          en: { title: 'New inquiry from the website', name: 'Name', phone: 'Phone', email: 'Email', area: 'Practice area', desc: 'Details' }
+        }[currentLang] || {};
+        const areaText = selectEl && selectEl.selectedIndex > 0 ? selectEl.options[selectEl.selectedIndex].text : area;
+        const lines = [labels.title, `${labels.name}: ${name}`, `${labels.phone}: ${phone}`];
+        if (email) lines.push(`${labels.email}: ${email}`);
+        if (areaText) lines.push(`${labels.area}: ${areaText}`);
+        lines.push(`${labels.desc}: ${desc}`);
+        const link = document.createElement('a');
+        link.href = `https://wa.me/${OFFICE_WHATSAPP}?text=${encodeURIComponent(lines.join('\n'))}`;
+        link.target = '_blank';
+        link.rel = 'noopener';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
         setCookie('klf_last_submit', Date.now().toString(), 10);
         document.getElementById('form-inner').style.display = 'none';
         document.getElementById('form-success').style.display = 'block';
@@ -4573,7 +4560,6 @@
       setLang(savedLang);
       animateHeroWords();
       initStarSelector();
-      loadReviews();
 
       // Form floating label helper
       const updateInputState = (input) => {
