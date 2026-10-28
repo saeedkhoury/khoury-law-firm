@@ -1701,6 +1701,23 @@
       font-size: 0.8rem;
       color: rgba(255, 255, 255, 0.3);
     }
+    .skova-credit {
+      margin-top: 0.9rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: start;
+    }
+    .skova-credit a {
+      color: rgba(255, 255, 255, 0.62);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.2s;
+    }
+    .skova-credit a:hover,
+    .skova-credit a:focus-visible {
+      color: var(--gold2);
+    }
     .footer-links {
       display: flex;
       gap: 1.8rem;
@@ -2106,6 +2123,14 @@
         flex-direction: column;
         gap: 1.5rem;
         text-align: center;
+      }
+      .skova-credit {
+        text-align: center;
+      }
+      /* the floating WhatsApp and accessibility buttons sit over the page's bottom corner:
+         room under the footer's last line so it can scroll clear of them */
+      footer {
+        padding-bottom: 6.5rem;
       }
       .footer-links {
         justify-content: center;
@@ -3001,6 +3026,7 @@
           <a href="#" id="terms">תנאי שימוש</a>
         </div>
       </div>
+      <p class="skova-credit"><a href="https://skova.dev" target="_blank" rel="noopener" dir="ltr" lang="en" aria-label="Developed by SKOVA (opens in a new tab)">Developed by ©SKOVA</a></p>
     </div>
   </footer>
 
